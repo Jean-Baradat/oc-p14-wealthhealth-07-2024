@@ -6,7 +6,7 @@ import { fileURLToPath } from "url"
 export default defineConfig({
 	plugins: [react()],
 	resolve: {
-		// If you add an alias, also add it to jsconfig.json
+		// If you add an alias, also add it to tsconfig.app.json
 		alias: {
 			"@": fileURLToPath(new URL("./src", import.meta.url)),
 		},

@@ -11,11 +11,9 @@
 		"plugin:react-hooks/recommended"
 	],
 	"parser": "@typescript-eslint/parser",
-	"plugins": [
-		"react-refresh",
-		"react"
-	],
+	"plugins": ["react-refresh", "react"],
 	"rules": {
+		"react/react-in-jsx-scope": "off",
 		"react-refresh/only-export-components": [
 			"warn",
 			{
@@ -27,10 +25,7 @@
 			{
 				"patterns": [
 					{
-						"group": [
-							"../*",
-							"./"
-						],
+						"group": ["../*", "./"],
 						"message": "Please use the @/ alias instead of relative paths."
 					}
 				]
@@ -55,18 +50,9 @@
 				"avoidEscape": true
 			}
 		],
-		"indent": [
-			"error",
-			"tab"
-		],
-		"semi": [
-			"error",
-			"never"
-		],
-		"linebreak-style": [
-			"error",
-			"unix"
-		],
+		"indent": ["error", "tab"],
+		"semi": ["error", "never"],
+		"linebreak-style": ["error", "unix"],
 		"react/function-component-definition": [
 			2,
 			{

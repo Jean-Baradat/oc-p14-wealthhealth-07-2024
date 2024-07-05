@@ -1,11 +1,5 @@
-import React from "react"
-
-/**
- *
- * @returns
- */
 const App = () => {
-	return <div>main</div>
+	return <div>dyesy</div>
 }
 
 export default App
