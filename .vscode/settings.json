@@ -1,0 +1,12 @@
+{
+	"editor.formatOnSave": true,
+	"files.eol": "\n",
+	"sonarlint.rules": {
+		"javascript:S3358": {
+			"level": "off"
+		}
+	},
+	"editor.quickSuggestions": {
+		"strings": true
+	}
+}
