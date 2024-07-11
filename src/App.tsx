@@ -1,7 +1,5 @@
-import React from "react"
-
 const App = () => {
-	return <div>rrs</div>
+	return <div>test</div>
 }
 
 export default App

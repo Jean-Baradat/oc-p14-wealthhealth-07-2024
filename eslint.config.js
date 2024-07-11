@@ -8,9 +8,28 @@ import eslintPluginReact from "eslint-plugin-react"
 import eslintPluginReactRefresh from "eslint-plugin-react-refresh"
 
 export default [
+	// Specify the file extensions to lint
 	{
 		files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
 	},
+
+	// Directories to ignore during linting
+	{
+		ignores: ["**/build/", "**/node_modules/", "**/dist/"],
+	},
+
+	// Configure the import resolver for specific extensions
+	{
+		settings: {
+			"import/resolver": {
+				node: {
+					extensions: [".js", ".jsx", ".ts", ".tsx"],
+				},
+			},
+		},
+	},
+
+	// Configure React plugin and related rules
 	{
 		plugins: {
 			eslintPluginReact,
@@ -19,28 +38,25 @@ export default [
 			"react/jsx-uses-vars": "error",
 			"react/no-array-index-key": "warn",
 			"react/function-component-definition": [
-				2,
+				"warn",
 				{
 					namedComponents: "arrow-function",
 				},
 			],
-			"react/jsx-uses-react": "off",
-			"react/react-in-jsx-scope": "off",
 		},
 	},
+
+	// Configure React Refresh plugin and related rules
 	{
 		plugins: {
 			"react-refresh": eslintPluginReactRefresh,
 		},
 		rules: {
-			"react-refresh/only-export-components": [
-				"warn",
-				{
-					allowConstantExport: true,
-				},
-			],
+			"react-refresh/only-export-components": "warn",
 		},
 	},
+
+	// Configure language options and parser settings
 	{
 		languageOptions: {
 			parser,
@@ -53,9 +69,8 @@ export default [
 			},
 		},
 	},
-	{
-		ignores: ["**/build/", "**/node_modules/", "**/dist/"],
-	},
+
+	// Define general code style rules
 	{
 		rules: {
 			"no-restricted-imports": [
@@ -92,6 +107,7 @@ export default [
 			"linebreak-style": ["error", "unix"],
 		},
 	},
+
 	pluginJs.configs.recommended,
 	...tseslint.configs.recommended,
 	...fixupConfigRules({
@@ -100,6 +116,10 @@ export default [
 			react: {
 				version: "detect",
 			},
+		},
+		rules: {
+			"react/jsx-uses-react": "off",
+			"react/react-in-jsx-scope": "off",
 		},
 	}),
 ]

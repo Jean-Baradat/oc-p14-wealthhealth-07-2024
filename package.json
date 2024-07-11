@@ -6,9 +6,9 @@
 	"scripts": {
 		"dev": "vite",
 		"dev:network": "vite --host",
-		"build": "tsc -b && vite build",
+		"build:dev": "tsc -b && vite build",
+		"build:prod": "tsc -b && eslint . --max-warnings=0 && vite build",
 		"lint": "eslint .",
-		"lint:fix": "eslint --fix",
 		"prettier": "prettier --write .",
 		"preview": "vite preview"
 	},
