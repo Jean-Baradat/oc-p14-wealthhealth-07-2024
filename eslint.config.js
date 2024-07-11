@@ -54,6 +54,7 @@ export default [
 		rules: {
 			"react-refresh/only-export-components": "warn",
 		},
+		ignores: ["**/src/components/shadcn/**/*"],
 	},
 
 	// Configure language options and parser settings
