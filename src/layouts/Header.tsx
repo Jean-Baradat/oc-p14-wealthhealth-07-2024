@@ -37,11 +37,21 @@ const Header = () => {
 							href="#"
 							className="mb-5 flex items-center gap-4 text-lg font-semibold"
 						>
-							<img
-								src="./favicon.webp"
-								alt="HRnet logo"
-								className="h-6 w-6"
-							/>
+							<picture>
+								<source
+									srcSet="./favicon.webp"
+									type="image/webp"
+								/>
+								<source
+									srcSet="./favicon.avif"
+									type="image/avif"
+								/>
+								<img
+									src="./favicon-32x32.png"
+									alt="HRnet logo"
+									className="h-6 w-6"
+								/>
+							</picture>
 							<span>HRnet</span>
 						</Link>
 						<Link

@@ -10,11 +10,21 @@ const Aside = () => {
 						href="/"
 						className="flex items-center gap-2 font-semibold"
 					>
-						<img
-							src="./favicon.webp"
-							alt="HRnet logo"
-							className="h-6 w-6"
-						/>
+						<picture>
+							<source
+								srcSet="./favicon.webp"
+								type="image/webp"
+							/>
+							<source
+								srcSet="./favicon.avif"
+								type="image/avif"
+							/>
+							<img
+								src="./favicon-32x32.png"
+								alt="HRnet logo"
+								className="h-6 w-6"
+							/>
+						</picture>
 						<span>HRnet</span>
 					</Link>
 				</div>
