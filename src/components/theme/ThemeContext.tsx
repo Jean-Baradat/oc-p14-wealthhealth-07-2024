@@ -21,4 +21,5 @@ const ThemeProviderContext = createContext<{
 	setTheme: () => null,
 })
 
-export { ThemeProviderContext, Theme }
+export type { Theme }
+export { ThemeProviderContext }
