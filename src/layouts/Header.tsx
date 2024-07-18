@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { CircleUser, Home, Menu, List, Package2 } from "lucide-react"
+import { CircleUser, Home, Menu, List } from "lucide-react"
 
 import { Button } from "@/components/shadcn/button"
 import {
@@ -37,7 +37,11 @@ const Header = () => {
 							href="#"
 							className="mb-5 flex items-center gap-4 text-lg font-semibold"
 						>
-							<Package2 className="h-6 w-6" />
+							<img
+								src="./favicon.webp"
+								alt="HRnet logo"
+								className="h-6 w-6"
+							/>
 							<span>HRnet</span>
 						</Link>
 						<Link

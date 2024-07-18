@@ -1,4 +1,4 @@
-import { Home, List, Package2 } from "lucide-react"
+import { Home, List } from "lucide-react"
 import { Link } from "react-router-dom"
 
 const Aside = () => {
@@ -10,7 +10,11 @@ const Aside = () => {
 						href="/"
 						className="flex items-center gap-2 font-semibold"
 					>
-						<Package2 className="h-6 w-6" />
+						<img
+							src="./favicon.webp"
+							alt="HRnet logo"
+							className="h-6 w-6"
+						/>
 						<span>HRnet</span>
 					</Link>
 				</div>
