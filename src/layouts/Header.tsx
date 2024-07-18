@@ -10,6 +10,7 @@ import {
 	SheetDescription,
 } from "@/components/shadcn/sheet"
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden"
+import { ModeToggle } from "@/components/ModeToggle"
 
 const Header = () => {
 	return (
@@ -83,13 +84,16 @@ const Header = () => {
 					</nav>
 				</SheetContent>
 			</Sheet>
-			<Button
-				variant="secondary"
-				size="icon"
-				className="rounded-full"
-			>
-				<CircleUser className="h-5 w-5" />
-			</Button>
+			<div className="flex gap-3">
+				<ModeToggle />
+				<Button
+					variant="secondary"
+					size="icon"
+					className="rounded-full"
+				>
+					<CircleUser className="h-5 w-5" />
+				</Button>
+			</div>
 		</header>
 	)
 }

@@ -1,8 +1,16 @@
 import { RouterProvider } from "react-router-dom"
 import Router from "@/routers/Router"
+import { ThemeProvider } from "@/components/theme"
 
 const App = () => {
-	return <RouterProvider router={Router} />
+	return (
+		<ThemeProvider
+			defaultTheme="light"
+			storageKey="theme"
+		>
+			<RouterProvider router={Router} />
+		</ThemeProvider>
+	)
 }
 
 export default App
