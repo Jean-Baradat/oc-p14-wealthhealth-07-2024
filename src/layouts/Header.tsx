@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import { Link, NavLink } from "react-router-dom"
 import { CircleUser, Home, Menu, List } from "lucide-react"
 
 import { Button } from "@/components/shadcn/button"
@@ -34,7 +34,7 @@ const Header = () => {
 					</SheetDescription>
 					<nav className="grid gap-2 text-lg font-medium">
 						<Link
-							href="#"
+							to="#"
 							className="mb-5 flex items-center gap-4 text-lg font-semibold"
 						>
 							<picture>
@@ -54,20 +54,32 @@ const Header = () => {
 							</picture>
 							<span>HRnet</span>
 						</Link>
-						<Link
-							href="#"
-							className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
+						<NavLink
+							to="/"
+							className={({ isActive }) =>
+								`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 ${
+									isActive
+										? "bg-muted text-foreground hover:text-foreground"
+										: "text-muted-foreground"
+								}`
+							}
 						>
 							<Home className="h-5 w-5" />
 							Dashboard
-						</Link>
-						<Link
-							href="#"
-							className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
+						</NavLink>
+						<NavLink
+							to="/staff-list"
+							className={({ isActive }) =>
+								`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 ${
+									isActive
+										? "bg-muted text-foreground hover:text-foreground"
+										: "text-muted-foreground"
+								}`
+							}
 						>
 							<List className="h-5 w-5" />
 							Staff list
-						</Link>
+						</NavLink>
 					</nav>
 				</SheetContent>
 			</Sheet>
