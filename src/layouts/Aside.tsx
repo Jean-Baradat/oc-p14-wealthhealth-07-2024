@@ -38,7 +38,7 @@ const Aside = () => {
 								}`
 							}
 						>
-							<Home className="h-4 w-4" />
+							<Home className="size-5" />
 							Dashboard
 						</NavLink>
 						<NavLink
@@ -49,7 +49,7 @@ const Aside = () => {
 								}`
 							}
 						>
-							<List className="h-4 w-4" />
+							<List className="size-5" />
 							Staff list
 						</NavLink>
 					</nav>

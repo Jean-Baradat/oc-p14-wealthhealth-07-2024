@@ -8,7 +8,7 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/shadcn/dropdown-menu"
 
-export const ModeToggle = () => {
+const ModeToggle = () => {
 	const { setTheme } = UseTheme()
 
 	return (
@@ -38,3 +38,5 @@ export const ModeToggle = () => {
 		</DropdownMenu>
 	)
 }
+
+export default ModeToggle

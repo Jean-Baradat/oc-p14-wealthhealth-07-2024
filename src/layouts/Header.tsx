@@ -10,7 +10,7 @@ import {
 	SheetDescription,
 } from "@/components/shadcn/sheet"
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden"
-import { ModeToggle } from "@/components/ModeToggle"
+import ModeToggle from "@/components/ModeToggle"
 
 const Header = () => {
 	return (
