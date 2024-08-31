@@ -26,3 +26,4 @@ dist-ssr
 
 # prod env
 .env.production
+.env.development
