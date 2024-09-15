@@ -29,7 +29,7 @@ const Aside = () => {
 					</Link>
 				</div>
 				<div className="flex-1">
-					<nav className="grid items-start gap-2 px-2 text-sm font-medium lg:px-4">
+					<nav className="sticky top-3 grid items-start gap-2 px-2 text-sm font-medium lg:top-4 lg:px-4">
 						<NavLink
 							to="/"
 							className={({ isActive }) =>

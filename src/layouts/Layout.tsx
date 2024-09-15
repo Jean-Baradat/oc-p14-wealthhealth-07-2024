@@ -5,7 +5,11 @@ import { Toaster } from "@/components/shadcn/toaster"
 
 const Layout = () => {
 	return (
-		<div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+		<div
+			className="grid min-h-screen w-full grid-cols-1 md:grid-cols-[220px_minmax(0,1fr)] lg:grid-cols-[280px_minmax(0,1fr)]"
+			{...{ "vaul-drawer-wrapper": "" }}
+			style={{ backgroundColor: "hsl(var(--background))" }}
+		>
 			<Aside />
 			<div className="flex flex-col">
 				<Header />

@@ -1,27 +1,15 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { addMonths, addYears, format, parseISO } from "date-fns"
-import { CalendarIcon, OctagonAlert, CircleHelp } from "lucide-react"
-import { cn } from "@/utils/utils"
-import { Calendar } from "@/components/shadcn/calendar"
+import { useForm, useWatch } from "react-hook-form"
 import { z } from "zod"
 import { Button } from "@/components/shadcn/button"
 import { getMonthsList, getYearsList } from "@/utils/dateUtils"
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/shadcn/form"
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@/components/shadcn/popover"
-import { Input } from "@/components/shadcn/input"
+import { Form } from "@/components/shadcn/form"
 import { toast } from "@/components/shadcn/use-toast"
+import { useEffect, useMemo } from "react"
+import FormFieldDefaultInput from "@/components/FormFieldDefaultInput"
+import FormFieldDateInput from "@/components/FormFieldDateInput"
+import { Label } from "@/components/shadcn/label"
+import { Input } from "@/components/shadcn/input"
 import {
 	Select,
 	SelectContent,
@@ -29,15 +17,13 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/shadcn/select"
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "@/components/shadcn/tooltip"
-import { useState, useMemo } from "react"
-import { NavLink } from "react-router-dom"
+import AutoComplete from "@/components/AutoComplete"
+import { useSelector, useDispatch } from "react-redux"
+import { staffFormStateData, update } from "@/store/Slices"
 
+/**
+ * Validation schema for the staff form.
+ */
 const FormSchema = z.object({
 	"first-name": z
 		.string()
@@ -74,30 +60,67 @@ const FormSchema = z.object({
 		.min(1, {
 			message: "Required",
 		})
-		.regex(/^\d{4}-\d{2}-\d{2}$/, "Format must be YYYY-MM-DD")
-		.date()
-		.transform(dateString => new Date(dateString))
-		.refine(date => date >= new Date("1900-01-01"), {
+		.regex(/^\d{2}-\d{2}-\d{4}$/, "Format must be MM-DD-YYYY")
+		.transform(DS => {
+			const [month, day, year] = DS.split("-")
+			return `${year}-${month}-${day}`
+		})
+		.pipe(z.string().date("Not invalid"))
+		.refine(DS => new Date(DS) >= new Date("1900-01-01"), {
 			message: "Must be after January 1st, 1900",
 		})
-		.refine(date => date <= new Date(), {
+		.refine(DS => new Date(DS) <= new Date(), {
 			message: "Cannot be in the future",
+		}),
+	"date-of-start": z
+		.string()
+		.min(1, {
+			message: "Required",
+		})
+		.regex(/^\d{2}-\d{2}-\d{4}$/, "Format must be MM-DD-YYYY")
+		.transform(DS => {
+			const [month, day, year] = DS.split("-")
+			return `${year}-${month}-${day}`
+		})
+		.pipe(z.string().date("Not invalid"))
+		.refine(DS => new Date(DS) >= new Date("1900-01-01"), {
+			message: "Must be after January 1st, 1900",
+		})
+		.refine(DS => new Date(DS) <= new Date(), {
+			message: "Cannot be in the future",
+		}),
+	street: z
+		.string()
+		.min(1, {
+			message: "Required",
+		})
+		.regex(/^\d+\s+[a-zA-Z0-9\s.,#-]+$/, "Format is invalid")
+		.min(2, {
+			message: "Too short (minimum 2 characters)",
+		})
+		.max(50, {
+			message: "Too long (maximum 30 characters)",
 		}),
 })
 
 const StaffForm = () => {
 	const years = useMemo(() => getYearsList(), [])
 	const months = useMemo(() => getMonthsList(), [])
-	const [date, setDate] = useState<Date | null>(null)
+	const dispatch = useDispatch()
+	const staffFormStateDataSelect = useSelector(staffFormStateData)
 
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
-		defaultValues: {
-			"first-name": "",
-			"last-name": "",
-			"date-of-birth": "",
-		},
+		defaultValues: staffFormStateDataSelect,
 	})
+
+	const formValues = useWatch({
+		control: form.control,
+	})
+
+	useEffect(() => {
+		dispatch(update(formValues))
+	}, [formValues])
 
 	const onSubmit = (data: z.infer<typeof FormSchema>) => {
 		toast({
@@ -116,274 +139,123 @@ const StaffForm = () => {
 				onSubmit={form.handleSubmit(onSubmit)}
 				className="space-y-6"
 			>
-				<FormField
-					control={form.control}
-					name="first-name"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel className="inline-flex items-center gap-1">
-								<span>First Name</span>
-								{form.formState.errors["first-name"] && (
-									<OctagonAlert className="size-4" />
-								)}
-								<FormMessage />
-							</FormLabel>
+				<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+					<FormFieldDefaultInput
+						form={form}
+						name="first-name"
+						label="First Name"
+						input={{ maxLength: 30, placeholder: "John" }}
+						invalidStringMessage={{
+							content: `
+								Please enter only letters, with or without accents.
+								You can include spaces, hyphens or an apostrophe between words. 
+								Your entry must not exceed three words. Trim any leading 
+								or trailing spaces from your input.
+							`,
+							example:
+								"Examples: Jean-Pierre, O'Connor, محمد, Иван, María José D.",
+						}}
+					/>
 
-							<FormControl>
-								<div className="flex gap-2">
-									<Input
-										maxLength={30}
-										placeholder="John"
-										{...field}
-									/>
-									{form.formState.errors["first-name"]?.type ===
-										"invalid_string" && (
-										<Popover>
-											<PopoverTrigger asChild>
-												<Button
-													variant={"link"}
-													className="hover:bg-muted"
-												>
-													<CircleHelp className="size-4" />
-												</Button>
-											</PopoverTrigger>
-											<PopoverContent align="end">
-												<p className="pb-2">
-													Please enter only letters, with or without accents.
-													You can include spaces, hyphens or an apostrophe
-													between words. Your entry must not exceed three words.
-												</p>
-												<p className="pb-3">
-													Examples: Jean-Pierre, O'Connor, محمد, Иван, María
-													José D.
-												</p>
-												<Button
-													className="w-full"
-													asChild
-												>
-													<NavLink to="">A problem ? Report a bug</NavLink>
-												</Button>
-											</PopoverContent>
-										</Popover>
-									)}
-								</div>
-							</FormControl>
-						</FormItem>
-					)}
-				/>
+					<FormFieldDefaultInput
+						form={form}
+						name="last-name"
+						label="Last Name"
+						input={{ maxLength: 30, placeholder: "Doe" }}
+						invalidStringMessage={{
+							content: `
+								Please enter only letters, with or without accents.
+								You can include spaces, hyphens or an apostrophe
+								between words. Your entry must not exceed three words.
+								Trim any leading or trailing spaces from your input.
+							`,
+							example: "Examples: Dubois, Fitzgerald, الحسن, Петров, Rodríguez",
+						}}
+					/>
+				</div>
 
-				<FormField
-					control={form.control}
-					name="last-name"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel className="inline-flex items-center gap-1">
-								<span>Last Name</span>
-								{form.formState.errors["last-name"] && (
-									<OctagonAlert className="size-4" />
-								)}
-								<FormMessage />
-							</FormLabel>
-
-							<FormControl>
-								<div className="flex gap-2">
-									<Input
-										maxLength={30}
-										placeholder="Doe"
-										{...field}
-									/>
-									{form.formState.errors["last-name"]?.type ===
-										"invalid_string" && (
-										<Popover>
-											<PopoverTrigger asChild>
-												<Button
-													variant={"link"}
-													className="hover:bg-muted"
-												>
-													<CircleHelp className="size-4" />
-												</Button>
-											</PopoverTrigger>
-											<PopoverContent align="end">
-												<p className="pb-2">
-													Please enter only letters, with or without accents.
-													You can include spaces, hyphens or an apostrophe
-													between words. Your entry must not exceed three words.
-												</p>
-												<p className="pb-3">
-													Examples: Dubois, Fitzgerald, الحسن, Петров, Rodríguez
-												</p>
-												<Button
-													className="w-full"
-													asChild
-												>
-													<NavLink to="">A problem ? Report a bug</NavLink>
-												</Button>
-											</PopoverContent>
-										</Popover>
-									)}
-								</div>
-							</FormControl>
-						</FormItem>
-					)}
-				/>
-
-				<FormField
-					control={form.control}
+				<FormFieldDateInput
+					form={form}
 					name="date-of-birth"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel className="inline-flex items-center gap-1">
-								<span>Date of Birth</span>
-								{form.formState.errors["date-of-birth"] && (
-									<OctagonAlert className="size-4" />
-								)}
-								<FormMessage />
-							</FormLabel>
-
-							<FormControl>
-								<div className="flex gap-2">
-									<Popover>
-										<PopoverTrigger asChild>
-											<Button
-												variant={"outline"}
-												className={!date && "text-muted-foreground"}
-											>
-												<CalendarIcon className="size-4" />
-											</Button>
-										</PopoverTrigger>
-
-										<PopoverContent
-											className="w-auto p-3"
-											align="start"
-										>
-											<div className="flex gap-3">
-												<Select
-													onValueChange={year => {
-														const selectedYear = parseInt(year)
-														let newDate = null
-
-														if (date) {
-															newDate = addYears(
-																date,
-																selectedYear - date.getFullYear(),
-															)
-														} else {
-															newDate = new Date(selectedYear, 0, 1)
-														}
-
-														setDate(newDate)
-														field.onChange(format(newDate, "yyyy-MM-dd"))
-													}}
-													defaultValue={date ? format(date, "yyyy") : undefined}
-													value={date ? format(date, "yyyy") : undefined}
-												>
-													<SelectTrigger>
-														<SelectValue placeholder="Select Year" />
-													</SelectTrigger>
-													<SelectContent
-														position="popper"
-														className="max-h-80"
-													>
-														{years.map(year => {
-															return (
-																<SelectItem
-																	key={year.key}
-																	value={year.value}
-																>
-																	{year.value}
-																</SelectItem>
-															)
-														})}
-													</SelectContent>
-												</Select>
-												<Select
-													onValueChange={month => {
-														const selectedMonth = parseInt(month) - 1
-														let newDate = null
-
-														if (date) {
-															newDate = addMonths(
-																date,
-																selectedMonth - date.getMonth(),
-															)
-														} else {
-															newDate = new Date(
-																new Date().getFullYear(),
-																selectedMonth,
-																1,
-															)
-														}
-
-														setDate(newDate)
-														field.onChange(format(newDate, "yyyy-MM-dd"))
-													}}
-													defaultValue={date ? format(date, "M") : undefined}
-													value={date ? format(date, "M") : undefined}
-												>
-													<SelectTrigger>
-														<SelectValue placeholder="Select Month" />
-													</SelectTrigger>
-													<SelectContent
-														position="popper"
-														className="max-h-80"
-													>
-														{months.map(value => {
-															return (
-																<SelectItem
-																	key={value.key}
-																	value={value.monthNumber}
-																>
-																	{value.value}
-																</SelectItem>
-															)
-														})}
-													</SelectContent>
-												</Select>
-											</div>
-											<Calendar
-												mode="single"
-												selected={date}
-												defaultMonth={date}
-												key={date?.toISOString()}
-												onSelect={value => {
-													if (
-														value instanceof Date &&
-														!isNaN(value.getTime())
-													) {
-														setDate(value)
-														field.onChange(format(value, "yyyy-MM-dd"))
-													}
-												}}
-												disabled={date =>
-													date >= new Date() || date <= new Date("1900-01-01")
-												}
-											/>
-										</PopoverContent>
-									</Popover>
-									<Input
-										maxLength={10}
-										placeholder="1994-02-22"
-										{...field}
-										onChange={e => {
-											const inputDate = new Date(e.target.value)
-
-											if (
-												inputDate instanceof Date &&
-												!isNaN(inputDate.getTime()) &&
-												inputDate <= new Date() &&
-												inputDate >= new Date("1900-01-01")
-											) {
-												setDate(inputDate)
-											}
-
-											field.onChange(e.target.value)
-										}}
-									/>
-								</div>
-							</FormControl>
-						</FormItem>
-					)}
+					label="Date of Birth"
+					years={years}
+					months={months}
+					input={{ maxLength: 10, placeholder: "02-22-1994" }}
 				/>
+
+				<FormFieldDateInput
+					form={form}
+					name="date-of-start"
+					label="Date of Start"
+					years={years}
+					months={months}
+					input={{ maxLength: 10, placeholder: "02-22-1994" }}
+				/>
+
+				<fieldset className="min-w-0 rounded-md border p-4">
+					<legend className="px-2 text-sm font-semibold">Address</legend>
+					<div className="flex flex-col gap-4">
+						<AutoComplete
+							placeholders={{
+								button: "Finding your address made easy",
+								input: "e.g. 1600 Pennsylvania Avenue NW, Washington, DC 20500",
+							}}
+						/>
+
+						<div className="grid gap-4 rounded-lg border bg-muted/10 px-3 py-2">
+							<FormFieldDefaultInput
+								form={form}
+								name="street"
+								label="Street"
+								input={{ maxLength: 50, placeholder: "1234 Main St" }}
+								invalidStringMessage={{
+									content: `
+									Please enter a valid address, starting with its number, 
+									then its name and type, and other information if necessary. 
+									You can include spaces, hyphens, commas, dots or a pound sign.
+								`,
+									example:
+										"Exemples : 123 Main St, 42 Broadway Ave #1234, 1600 Pennsylvania Avenue NW",
+								}}
+							/>
+							<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+								<FormFieldDefaultInput
+									form={form}
+									name="city"
+									label="City"
+									input={{ maxLength: 30, placeholder: "New York" }}
+									invalidStringMessage={{
+										content: `
+										...
+									`,
+										example: "Examples: ...",
+									}}
+								/>
+								<div className="space-y-2">
+									<Label htmlFor="state">State</Label>
+									<Select>
+										<SelectTrigger id="state">
+											<SelectValue placeholder="Select a state" />
+										</SelectTrigger>
+										<SelectContent>
+											<SelectItem value="NY">New York</SelectItem>
+											<SelectItem value="CA">California</SelectItem>
+											<SelectItem value="TX">Texas</SelectItem>
+											{/* Add more states as needed */}
+										</SelectContent>
+									</Select>
+								</div>
+							</div>
+							<div className="space-y-2">
+								<Label htmlFor="zipCode">ZIP Code</Label>
+								<Input
+									id="zipCode"
+									placeholder="10001"
+								/>
+							</div>
+						</div>
+					</div>
+				</fieldset>
 
 				<Button type="submit">Save</Button>
 			</form>
