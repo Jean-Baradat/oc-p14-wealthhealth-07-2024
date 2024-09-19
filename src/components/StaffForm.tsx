@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm, useWatch } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { Button } from "@/components/shadcn/button"
 import { getMonthsList, getYearsList } from "@/utils/dateUtils"
@@ -20,6 +20,7 @@ import {
 import AutoComplete from "@/components/AutoComplete"
 import { useSelector, useDispatch } from "react-redux"
 import { staffFormStateData, update } from "@/store/Slices"
+import { merge } from "lodash"
 
 /**
  * Validation schema for the staff form.
@@ -101,6 +102,18 @@ const FormSchema = z.object({
 		.max(50, {
 			message: "Too long (maximum 30 characters)",
 		}),
+	city: z
+		.string()
+		.min(1, {
+			message: "Required",
+		})
+		.regex(/^[a-zA-Z\s.,'-]+$/, "Format is invalid")
+		.min(2, {
+			message: "Too short (minimum 2 characters)",
+		})
+		.max(50, {
+			message: "Too long (maximum 30 characters)",
+		}),
 })
 
 const StaffForm = () => {
@@ -114,13 +127,11 @@ const StaffForm = () => {
 		defaultValues: staffFormStateDataSelect,
 	})
 
-	const formValues = useWatch({
-		control: form.control,
-	})
-
 	useEffect(() => {
-		dispatch(update(formValues))
-	}, [formValues])
+		return () => {
+			dispatch(update(merge({}, staffFormStateDataSelect, form.getValues())))
+		}
+	}, [])
 
 	const onSubmit = (data: z.infer<typeof FormSchema>) => {
 		toast({
@@ -246,13 +257,19 @@ const StaffForm = () => {
 									</Select>
 								</div>
 							</div>
-							<div className="space-y-2">
-								<Label htmlFor="zipCode">ZIP Code</Label>
-								<Input
-									id="zipCode"
-									placeholder="10001"
-								/>
-							</div>
+
+							<FormFieldDefaultInput
+								form={form}
+								name="zipCode"
+								label="ZIP Code"
+								input={{ maxLength: 50, placeholder: "10001" }}
+								invalidStringMessage={{
+									content: `
+										...
+									`,
+									example: "Examples: ...",
+								}}
+							/>
 						</div>
 					</div>
 				</fieldset>

@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit"
-
 export interface StaffFormState {
 	"first-name"?: string
 	"last-name"?: string
@@ -29,14 +28,7 @@ export const staffFormSlice = createSlice({
 	initialState,
 	reducers: {
 		update: (state, { payload }) => {
-			const { addressDataFound, ...rest } = payload
-
-			Object.assign(state, rest)
-
-			state.addressDataFound = {
-				...state.addressDataFound,
-				...addressDataFound,
-			}
+			Object.assign(state, payload)
 		},
 	},
 })

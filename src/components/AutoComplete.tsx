@@ -31,6 +31,7 @@ import { useGetSearchQuery } from "@/store/ApiSlices"
 import { skipToken } from "@reduxjs/toolkit/query"
 import { useDispatch } from "react-redux"
 import { update } from "@/store/Slices"
+import { merge } from "lodash"
 
 interface AutoCompleteProps {
 	placeholders: {
@@ -63,8 +64,10 @@ const AutoComplete: FC<AutoCompleteProps> = ({ placeholders }) => {
 	}, [inputValue])
 
 	useEffect(() => {
-		if (selectedAddress) {
-			dispatch(update({ addressDataFound: selectedAddress }))
+		return () => {
+			if (selectedAddress.length !== 0) {
+				dispatch(update({ addressDataFound: selectedAddress }))
+			}
 		}
 	}, [selectedAddress])
 

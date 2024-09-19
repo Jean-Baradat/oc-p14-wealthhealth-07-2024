@@ -7,7 +7,7 @@
 		"dev": "vite",
 		"dev:network": "vite --host",
 		"tsc:noEmit": "tsc --noEmit --project tsconfig.app.json",
-		"build:dev": "tsc -b && vite build",
+		"build:dev": "tsc --noEmitOnError false && vite build",
 		"build:prod": "tsc -b && eslint . --max-warnings=0 && vite build",
 		"lint": "eslint .",
 		"prettier": "prettier --write .",
