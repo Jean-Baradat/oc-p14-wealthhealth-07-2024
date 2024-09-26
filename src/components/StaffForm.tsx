@@ -8,18 +8,11 @@ import { toast } from "@/components/shadcn/use-toast"
 import { useEffect, useMemo } from "react"
 import FormFieldDefaultInput from "@/components/FormFieldDefaultInput"
 import FormFieldDateInput from "@/components/FormFieldDateInput"
-import { Label } from "@/components/shadcn/label"
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/shadcn/select"
 import AutoComplete from "@/components/AutoComplete"
 import { useSelector, useDispatch } from "react-redux"
 import { staffFormStateData, update } from "@/store/Slices"
 import { merge } from "lodash"
+import FormFieldSelect from "@/components/FormFieldSelect"
 
 /**
  * Validation schema for the staff form.
@@ -125,6 +118,9 @@ const FormSchema = z.object({
 		.max(10, {
 			message: "Too long (maximum 10 characters, including hyphen)",
 		}),
+	state: z.string().min(1, {
+		message: "Required",
+	}),
 })
 
 const StaffForm = () => {
@@ -161,6 +157,52 @@ const StaffForm = () => {
 				</pre>
 			),
 		})
+	}
+
+	/**
+	 * Constructs a street address string from the found address data.
+	 * Combines the house number and road name if available.
+	 *
+	 * @returns {string} The formatted street address
+	 */
+	const handleAutocompleteValueStreet = (): string => {
+		const house_number = addressFound.address.house_number
+		const road = addressFound.address.road
+
+		return `${house_number ?? ""}${house_number && road ? " " : ""}${road ?? ""}`
+	}
+
+	/**
+	 * Retrieves the city name from the found address data.
+	 * Searches through a hierarchy of address components to find the most appropriate city name.
+	 *
+	 * @returns {string} The city name if found, or an empty string if no suitable city name is available
+	 */
+	const handleAutocompleteValueCity = (): string => {
+		const address = addressFound.address
+		const cityHierarchy = [
+			"city",
+			"town",
+			"village",
+			"municipality",
+			"suburb",
+			"borough",
+			"city_district",
+			"locality",
+			"hamlet",
+			"district",
+			"subdivision",
+			"quarter",
+			"isolated_dwelling",
+		]
+
+		for (const key of cityHierarchy) {
+			if (address[key] && address[key].trim() !== "") {
+				return address[key]
+			}
+		}
+
+		return ""
 	}
 
 	return (
@@ -238,19 +280,14 @@ const StaffForm = () => {
 								input={{ maxLength: 100, placeholder: "1234 Main St" }}
 								invalidStringMessage={{
 									content: `
-									Please enter a valid address, starting with its number, 
-									then its name and type, and other information if necessary. 
-									You can include spaces, hyphens, commas, dots or a pound sign.
-								`,
+										Please enter a valid address, starting with its number, 
+										then its name and type, and other information if necessary. 
+										You can include spaces, hyphens, commas, dots or a pound sign.
+									`,
 									example:
 										"Exemples : 123 Main St, 42 Broadway Ave #1234, 1600 Pennsylvania Avenue NW",
 								}}
-								autocompleteValue={
-									(addressFound.address.house_number ?? "") +
-									(addressFound.address.road
-										? " " + addressFound.address.road
-										: "")
-								}
+								autocompleteValue={handleAutocompleteValueStreet()}
 							/>
 							<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
 								<FormFieldDefaultInput
@@ -264,22 +301,14 @@ const StaffForm = () => {
 										`,
 										example: "Examples: ...",
 									}}
-									autocompleteValue={addressFound.address.city}
+									autocompleteValue={handleAutocompleteValueCity()}
 								/>
-								<div className="space-y-2">
-									<Label htmlFor="state">State</Label>
-									<Select>
-										<SelectTrigger id="state">
-											<SelectValue placeholder="Select a state" />
-										</SelectTrigger>
-										<SelectContent>
-											<SelectItem value="NY">New York</SelectItem>
-											<SelectItem value="CA">California</SelectItem>
-											<SelectItem value="TX">Texas</SelectItem>
-											{/* Add more states as needed */}
-										</SelectContent>
-									</Select>
-								</div>
+								<FormFieldSelect
+									form={{ control, errors }}
+									name="state"
+									label="State"
+									autocompleteValue={addressFound.address.state}
+								/>
 							</div>
 
 							<FormFieldDefaultInput

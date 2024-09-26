@@ -81,6 +81,19 @@ const AutoComplete: FC<AutoCompleteProps> = ({
 								city: "",
 								postcode: "",
 								house_number: "",
+								state: "",
+								town: "",
+								village: "",
+								municipality: "",
+								suburb: "",
+								borough: "",
+								city_district: "",
+								locality: "",
+								hamlet: "",
+								district: "",
+								subdivision: "",
+								quarter: "",
+								isolated_dwelling: "",
 							},
 						},
 					}),
@@ -166,7 +179,7 @@ const AutoComplete: FC<AutoCompleteProps> = ({
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent
-				className="p-0"
+				className="p-0 sm:w-[var(--radix-popper-anchor-width)]"
 				align="start"
 			>
 				<Command>
