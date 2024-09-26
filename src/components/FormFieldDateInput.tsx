@@ -161,7 +161,7 @@ const FormFieldDateInput = ({ form, name, label, years, months, input }) => {
 				<FormItem>
 					<FormLabel className="inline-flex items-center gap-1">
 						<span>{label}</span>
-						{form.formState.errors[name] && <OctagonAlert className="size-4" />}
+						{form.errors[name] && <OctagonAlert className="size-4" />}
 						<FormMessage />
 					</FormLabel>
 

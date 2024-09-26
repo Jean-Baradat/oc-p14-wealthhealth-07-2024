@@ -8,7 +8,7 @@ export interface StaffFormState {
 	city?: string
 	state?: string
 	zipCode?: string
-	addressDataFound?: object
+	addressFound?: object
 }
 
 const initialState: StaffFormState = {
@@ -20,7 +20,16 @@ const initialState: StaffFormState = {
 	city: "",
 	state: "",
 	zipCode: "",
-	addressDataFound: {},
+	addressFound: {
+		address: {
+			road: "",
+			city: "",
+			postcode: "",
+			house_number: "",
+		},
+		display_name: "Finding your address made easy",
+		place_id: null,
+	},
 }
 
 export const staffFormSlice = createSlice({

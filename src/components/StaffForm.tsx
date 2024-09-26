@@ -9,7 +9,6 @@ import { useEffect, useMemo } from "react"
 import FormFieldDefaultInput from "@/components/FormFieldDefaultInput"
 import FormFieldDateInput from "@/components/FormFieldDateInput"
 import { Label } from "@/components/shadcn/label"
-import { Input } from "@/components/shadcn/input"
 import {
 	Select,
 	SelectContent,
@@ -114,22 +113,42 @@ const FormSchema = z.object({
 		.max(50, {
 			message: "Too long (maximum 30 characters)",
 		}),
+	zipCode: z
+		.string()
+		.min(1, {
+			message: "Required",
+		})
+		.regex(/^\d{5}(-\d{4})?$/, "Format is invalid")
+		.min(5, {
+			message: "Too short (minimum 5 numbers)",
+		})
+		.max(10, {
+			message: "Too long (maximum 10 characters, including hyphen)",
+		}),
 })
 
 const StaffForm = () => {
 	const years = useMemo(() => getYearsList(), [])
 	const months = useMemo(() => getMonthsList(), [])
 	const dispatch = useDispatch()
-	const staffFormStateDataSelect = useSelector(staffFormStateData)
+	const staffFormData = useSelector(staffFormStateData)
+	const { addressFound } = staffFormData
 
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
-		defaultValues: staffFormStateDataSelect,
+		defaultValues: staffFormData,
 	})
+
+	const {
+		handleSubmit,
+		getValues,
+		control,
+		formState: { errors },
+	} = form
 
 	useEffect(() => {
 		return () => {
-			dispatch(update(merge({}, staffFormStateDataSelect, form.getValues())))
+			dispatch(update(merge({}, staffFormData, getValues())))
 		}
 	}, [])
 
@@ -147,12 +166,12 @@ const StaffForm = () => {
 	return (
 		<Form {...form}>
 			<form
-				onSubmit={form.handleSubmit(onSubmit)}
+				onSubmit={handleSubmit(onSubmit)}
 				className="space-y-6"
 			>
 				<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
 					<FormFieldDefaultInput
-						form={form}
+						form={{ control, errors }}
 						name="first-name"
 						label="First Name"
 						input={{ maxLength: 30, placeholder: "John" }}
@@ -169,7 +188,7 @@ const StaffForm = () => {
 					/>
 
 					<FormFieldDefaultInput
-						form={form}
+						form={{ control, errors }}
 						name="last-name"
 						label="Last Name"
 						input={{ maxLength: 30, placeholder: "Doe" }}
@@ -186,7 +205,7 @@ const StaffForm = () => {
 				</div>
 
 				<FormFieldDateInput
-					form={form}
+					form={{ control, errors }}
 					name="date-of-birth"
 					label="Date of Birth"
 					years={years}
@@ -195,7 +214,7 @@ const StaffForm = () => {
 				/>
 
 				<FormFieldDateInput
-					form={form}
+					form={{ control, errors }}
 					name="date-of-start"
 					label="Date of Start"
 					years={years}
@@ -207,18 +226,16 @@ const StaffForm = () => {
 					<legend className="px-2 text-sm font-semibold">Address</legend>
 					<div className="flex flex-col gap-4">
 						<AutoComplete
-							placeholders={{
-								button: "Finding your address made easy",
-								input: "e.g. 1600 Pennsylvania Avenue NW, Washington, DC 20500",
-							}}
+							inputPlaceholder="e.g. 1600 Pennsylvania Avenue NW, Washington, DC 20500"
+							displayName={addressFound.display_name}
 						/>
 
 						<div className="grid gap-4 rounded-lg border bg-muted/10 px-3 py-2">
 							<FormFieldDefaultInput
-								form={form}
+								form={{ control, errors }}
 								name="street"
 								label="Street"
-								input={{ maxLength: 50, placeholder: "1234 Main St" }}
+								input={{ maxLength: 100, placeholder: "1234 Main St" }}
 								invalidStringMessage={{
 									content: `
 									Please enter a valid address, starting with its number, 
@@ -228,19 +245,26 @@ const StaffForm = () => {
 									example:
 										"Exemples : 123 Main St, 42 Broadway Ave #1234, 1600 Pennsylvania Avenue NW",
 								}}
+								autocompleteValue={
+									(addressFound.address.house_number ?? "") +
+									(addressFound.address.road
+										? " " + addressFound.address.road
+										: "")
+								}
 							/>
 							<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
 								<FormFieldDefaultInput
-									form={form}
+									form={{ control, errors }}
 									name="city"
 									label="City"
-									input={{ maxLength: 30, placeholder: "New York" }}
+									input={{ maxLength: 100, placeholder: "New York" }}
 									invalidStringMessage={{
 										content: `
-										...
-									`,
+											...
+										`,
 										example: "Examples: ...",
 									}}
+									autocompleteValue={addressFound.address.city}
 								/>
 								<div className="space-y-2">
 									<Label htmlFor="state">State</Label>
@@ -259,16 +283,17 @@ const StaffForm = () => {
 							</div>
 
 							<FormFieldDefaultInput
-								form={form}
+								form={{ control, errors }}
 								name="zipCode"
 								label="ZIP Code"
-								input={{ maxLength: 50, placeholder: "10001" }}
+								input={{ maxLength: 10, placeholder: "10001" }}
 								invalidStringMessage={{
 									content: `
 										...
 									`,
 									example: "Examples: ...",
 								}}
+								autocompleteValue={addressFound.address.postcode}
 							/>
 						</div>
 					</div>

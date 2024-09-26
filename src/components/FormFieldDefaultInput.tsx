@@ -11,6 +11,8 @@ import { PopoverTrigger } from "@radix-ui/react-popover"
 import { Button } from "@/components/shadcn/button"
 import { CircleHelp, OctagonAlert } from "lucide-react"
 import { NavLink } from "react-router-dom"
+import { useEffect, useState } from "react"
+import { useController } from "react-hook-form"
 
 const FormFieldDefaultInput = ({
 	form,
@@ -18,27 +20,62 @@ const FormFieldDefaultInput = ({
 	label,
 	input,
 	invalidStringMessage,
+	autocompleteValue = "",
 }) => {
+	const [hasUserEdited, setHasUserEdited] = useState(false)
+
+	const { field } = useController({
+		name,
+		control: form.control,
+	})
+
+	useEffect(() => {
+		if (!hasUserEdited) {
+			if (field.value) {
+				field.onChange(field.value)
+			} else if (autocompleteValue) {
+				field.onChange(autocompleteValue)
+			}
+		}
+	}, [autocompleteValue, field.value])
+
+	const handleInput = e => {
+		const newValue = e.target.value
+
+		setHasUserEdited(true)
+		field.onChange(newValue)
+	}
+
 	return (
 		<FormField
 			control={form.control}
 			name={name}
-			render={({ field }) => (
+			render={() => (
 				<FormItem>
 					<FormLabel className="inline-flex items-center gap-1">
 						<span>{label}</span>
-						{form.formState.errors[name] && <OctagonAlert className="size-4" />}
+						{form.errors[name] && <OctagonAlert className="size-4" />}
 						<FormMessage />
 					</FormLabel>
 
 					<FormControl>
 						<div className="flex gap-2">
-							<Input
-								maxLength={input.maxLength}
-								placeholder={input.placeholder}
-								{...field}
-							/>
-							{form.formState.errors[name]?.type === "invalid_string" && (
+							{autocompleteValue ? (
+								<Input
+									maxLength={input.maxLength}
+									placeholder={input.placeholder}
+									{...field}
+									onChange={handleInput}
+								/>
+							) : (
+								<Input
+									maxLength={input.maxLength}
+									placeholder={input.placeholder}
+									{...field}
+								/>
+							)}
+
+							{form.errors[name]?.type === "invalid_string" && (
 								<Popover>
 									<PopoverTrigger asChild>
 										<Button

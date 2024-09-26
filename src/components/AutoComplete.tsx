@@ -31,7 +31,6 @@ import { useGetSearchQuery } from "@/store/ApiSlices"
 import { skipToken } from "@reduxjs/toolkit/query"
 import { useDispatch } from "react-redux"
 import { update } from "@/store/Slices"
-import { merge } from "lodash"
 
 interface AutoCompleteProps {
 	placeholders: {
@@ -46,7 +45,10 @@ interface Address {
 	address: object
 }
 
-const AutoComplete: FC<AutoCompleteProps> = ({ placeholders }) => {
+const AutoComplete: FC<AutoCompleteProps> = ({
+	inputPlaceholder,
+	displayName,
+}) => {
 	const [open, setOpen] = useState(false)
 	const [selectedAddress, setSelectedAddress] = useState<Array<Address>>([])
 	const [inputValue, setInputValue] = useState<string>("")
@@ -64,9 +66,25 @@ const AutoComplete: FC<AutoCompleteProps> = ({ placeholders }) => {
 	}, [inputValue])
 
 	useEffect(() => {
+		if (selectedAddress.length !== 0) {
+			dispatch(update({ addressFound: selectedAddress }))
+		}
+
 		return () => {
 			if (selectedAddress.length !== 0) {
-				dispatch(update({ addressDataFound: selectedAddress }))
+				dispatch(
+					update({
+						addressFound: {
+							...selectedAddress,
+							address: {
+								road: "",
+								city: "",
+								postcode: "",
+								house_number: "",
+							},
+						},
+					}),
+				)
 			}
 		}
 	}, [selectedAddress])
@@ -142,7 +160,7 @@ const AutoComplete: FC<AutoCompleteProps> = ({ placeholders }) => {
 					className="w-full justify-between"
 				>
 					<span className="truncate">
-						{selectedAddress.display_name ?? placeholders.button}
+						{selectedAddress.display_name ?? displayName}
 					</span>
 					<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 				</Button>
@@ -153,7 +171,7 @@ const AutoComplete: FC<AutoCompleteProps> = ({ placeholders }) => {
 			>
 				<Command>
 					<CommandInput
-						placeholder={placeholders.input}
+						placeholder={inputPlaceholder}
 						onValueChange={setInputValue}
 						value={inputValue}
 						className="placeholder:opacity-40"
@@ -175,7 +193,7 @@ const AutoComplete: FC<AutoCompleteProps> = ({ placeholders }) => {
 					className="w-full justify-between"
 				>
 					<span className="truncate">
-						{selectedAddress.display_name ?? placeholders.button}
+						{selectedAddress.display_name ?? displayName}
 					</span>
 					<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 				</Button>
@@ -190,7 +208,7 @@ const AutoComplete: FC<AutoCompleteProps> = ({ placeholders }) => {
 				</DrawerHeader>
 				<Command>
 					<CommandInput
-						placeholder={placeholders.input}
+						placeholder={inputPlaceholder}
 						onValueChange={setInputValue}
 						value={inputValue}
 						className="placeholder:opacity-50"
