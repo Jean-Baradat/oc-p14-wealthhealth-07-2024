@@ -8,6 +8,7 @@ export interface StaffFormState {
 	city?: string
 	state?: string
 	zipCode?: string
+	department?: string
 	addressFound?: object
 }
 
@@ -20,6 +21,7 @@ const initialState: StaffFormState = {
 	city: "",
 	state: "",
 	zipCode: "",
+	department: "",
 	addressFound: {
 		address: {
 			road: "",

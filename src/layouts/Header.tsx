@@ -26,7 +26,7 @@ const Header = () => {
 						<span className="sr-only">Toggle navigation menu</span>
 					</Button>
 				</SheetTrigger>
-				<SheetContent side="left">
+				<SheetContent side="bottom">
 					<SheetTitle>
 						<VisuallyHidden.Root>HRnet</VisuallyHidden.Root>
 					</SheetTitle>
@@ -35,7 +35,7 @@ const Header = () => {
 					</SheetDescription>
 					<nav className="grid gap-2 text-lg font-medium">
 						<Link
-							to="#"
+							to="/"
 							className="mb-5 flex items-center gap-4 text-lg font-semibold"
 						>
 							<picture>

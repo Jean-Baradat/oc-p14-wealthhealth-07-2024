@@ -13,6 +13,8 @@ import { useSelector, useDispatch } from "react-redux"
 import { staffFormStateData, update } from "@/store/Slices"
 import { merge } from "lodash"
 import FormFieldSelect from "@/components/FormFieldSelect"
+import { states } from "@/db/states"
+import { departments } from "@/db/departments"
 
 /**
  * Validation schema for the staff form.
@@ -119,6 +121,9 @@ const FormSchema = z.object({
 			message: "Too long (maximum 10 characters, including hyphen)",
 		}),
 	state: z.string().min(1, {
+		message: "Required",
+	}),
+	department: z.string().min(1, {
 		message: "Required",
 	}),
 })
@@ -307,7 +312,9 @@ const StaffForm = () => {
 									form={{ control, errors }}
 									name="state"
 									label="State"
-									autocompleteValue={addressFound.address.state}
+									dataList={states}
+									placeholder="Select a state"
+									tooltipContent="Delete the state"
 								/>
 							</div>
 
@@ -327,6 +334,15 @@ const StaffForm = () => {
 						</div>
 					</div>
 				</fieldset>
+
+				<FormFieldSelect
+					form={{ control, errors }}
+					name="department"
+					label="Department"
+					dataList={departments}
+					placeholder="Select a department"
+					tooltipContent="Delete the department"
+				/>
 
 				<Button type="submit">Save</Button>
 			</form>

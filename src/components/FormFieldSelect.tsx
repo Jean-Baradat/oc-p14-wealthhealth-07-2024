@@ -6,7 +6,6 @@ import {
 	FormMessage,
 } from "@/components/shadcn/form"
 import { OctagonAlert, X } from "lucide-react"
-import { states, type State } from "@/db/states"
 
 import {
 	Select,
@@ -25,7 +24,21 @@ import {
 	TooltipTrigger,
 } from "@/components/shadcn/tooltip"
 
-const FormFieldSelect = ({ form, name, label, autocompleteValue = "" }) => {
+type dataListItem = {
+	key: string
+	label: string
+	value: string
+}
+
+const FormFieldSelect = ({
+	form,
+	name,
+	label,
+	autocompleteValue = "",
+	dataList,
+	placeholder,
+	tooltipContent,
+}) => {
 	const [hasUserEdited, setHasUserEdited] = useState(false)
 
 	const { field } = useController({
@@ -72,17 +85,16 @@ const FormFieldSelect = ({ form, name, label, autocompleteValue = "" }) => {
 						>
 							<FormControl>
 								<SelectTrigger>
-									<SelectValue placeholder="Select a state" />
+									<SelectValue placeholder={placeholder} />
 								</SelectTrigger>
 							</FormControl>
-							<SelectContent className="max-h-48">
-								<SelectItem value="clear">Clear selection</SelectItem>
-								{states.map((state: State) => (
+							<SelectContent className="max-h-52">
+								{dataList.map((item: dataListItem) => (
 									<SelectItem
-										key={state.key}
-										value={state.label}
+										key={item.key}
+										value={item.label}
 									>
-										{state.value}
+										{item.value}
 									</SelectItem>
 								))}
 							</SelectContent>
@@ -100,7 +112,7 @@ const FormFieldSelect = ({ form, name, label, autocompleteValue = "" }) => {
 										</Button>
 									</TooltipTrigger>
 									<TooltipContent>
-										<p>Delete State</p>
+										<p>{tooltipContent}</p>
 									</TooltipContent>
 								</Tooltip>
 							</TooltipProvider>
