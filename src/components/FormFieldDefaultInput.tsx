@@ -66,12 +66,18 @@ const FormFieldDefaultInput = ({
 									placeholder={input.placeholder}
 									{...field}
 									onChange={handleInput}
+									className={
+										form.errors[name] && "focus-visible:ring-destructive"
+									}
 								/>
 							) : (
 								<Input
 									maxLength={input.maxLength}
 									placeholder={input.placeholder}
 									{...field}
+									className={
+										form.errors[name] && "focus-visible:ring-destructive"
+									}
 								/>
 							)}
 

@@ -1,5 +1,5 @@
 import { Link, NavLink } from "react-router-dom"
-import { CircleUser, Home, Menu, List } from "lucide-react"
+import { CircleUser, Home, Menu, List, X } from "lucide-react"
 
 import { Button } from "@/components/shadcn/button"
 import {
@@ -8,6 +8,7 @@ import {
 	SheetTrigger,
 	SheetTitle,
 	SheetDescription,
+	SheetClose,
 } from "@/components/shadcn/sheet"
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden"
 import ModeToggle from "@/components/ModeToggle"
@@ -34,27 +35,39 @@ const Header = () => {
 						<VisuallyHidden.Root>Navigation menu</VisuallyHidden.Root>
 					</SheetDescription>
 					<nav className="grid gap-2 text-lg font-medium">
-						<Link
-							to="/"
-							className="mb-5 flex items-center gap-4 text-lg font-semibold"
-						>
-							<picture>
-								<source
-									srcSet="./favicon.webp"
-									type="image/webp"
-								/>
-								<source
-									srcSet="./favicon.avif"
-									type="image/avif"
-								/>
-								<img
-									src="./favicon-32x32.png"
-									alt="HRnet logo"
-									className="h-6 w-6"
-								/>
-							</picture>
-							<span>HRnet</span>
-						</Link>
+						<div className="mb-5 flex items-center justify-between">
+							<Link
+								to="/"
+								className="flex items-center gap-4 text-lg font-semibold"
+							>
+								<picture>
+									<source
+										srcSet="./favicon.webp"
+										type="image/webp"
+									/>
+									<source
+										srcSet="./favicon.avif"
+										type="image/avif"
+									/>
+									<img
+										src="./favicon-32x32.png"
+										alt="HRnet logo"
+										className="h-6 w-6"
+									/>
+								</picture>
+								<span>HRnet</span>
+							</Link>
+							<SheetClose asChild>
+								<Button
+									size={"icon"}
+									variant={null}
+								>
+									<X className="size-4" />
+									<span className="sr-only">Close</span>
+								</Button>
+							</SheetClose>
+						</div>
+
 						<NavLink
 							to="/"
 							className={({ isActive }) =>

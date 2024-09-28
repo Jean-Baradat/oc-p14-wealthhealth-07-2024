@@ -84,7 +84,7 @@ const FormFieldSelect = ({
 							value={field.value || ""}
 						>
 							<FormControl>
-								<SelectTrigger>
+								<SelectTrigger ref={field.ref}>
 									<SelectValue placeholder={placeholder} />
 								</SelectTrigger>
 							</FormControl>
@@ -105,7 +105,7 @@ const FormFieldSelect = ({
 									<TooltipTrigger asChild>
 										<Button
 											variant={"outline"}
-											className="hover:bg-muted"
+											className="hover:bg-destructive/10"
 											onClick={handleClear}
 										>
 											<X className="size-4" />

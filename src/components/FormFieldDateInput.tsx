@@ -260,6 +260,9 @@ const FormFieldDateInput = ({ form, name, label, years, months, input }) => {
 								placeholder={input.placeholder}
 								{...field}
 								onChange={e => handleInput(e, field)}
+								className={
+									form.errors[name] && "focus-visible:ring-destructive"
+								}
 							/>
 						</div>
 					</FormControl>

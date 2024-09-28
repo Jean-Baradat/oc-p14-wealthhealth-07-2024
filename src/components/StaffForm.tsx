@@ -214,7 +214,7 @@ const StaffForm = () => {
 		<Form {...form}>
 			<form
 				onSubmit={handleSubmit(onSubmit)}
-				className="space-y-6"
+				className="mx-auto max-w-3xl space-y-6"
 			>
 				<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
 					<FormFieldDefaultInput
@@ -251,23 +251,25 @@ const StaffForm = () => {
 					/>
 				</div>
 
-				<FormFieldDateInput
-					form={{ control, errors }}
-					name="date-of-birth"
-					label="Date of Birth"
-					years={years}
-					months={months}
-					input={{ maxLength: 10, placeholder: "02-22-1994" }}
-				/>
+				<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+					<FormFieldDateInput
+						form={{ control, errors }}
+						name="date-of-birth"
+						label="Date of Birth"
+						years={years}
+						months={months}
+						input={{ maxLength: 10, placeholder: "02-22-1994" }}
+					/>
 
-				<FormFieldDateInput
-					form={{ control, errors }}
-					name="date-of-start"
-					label="Date of Start"
-					years={years}
-					months={months}
-					input={{ maxLength: 10, placeholder: "02-22-1994" }}
-				/>
+					<FormFieldDateInput
+						form={{ control, errors }}
+						name="date-of-start"
+						label="Date of Start"
+						years={years}
+						months={months}
+						input={{ maxLength: 10, placeholder: "02-22-1994" }}
+					/>
+				</div>
 
 				<fieldset className="min-w-0 rounded-md border p-4">
 					<legend className="px-2 text-sm font-semibold">Address</legend>
@@ -302,9 +304,11 @@ const StaffForm = () => {
 									input={{ maxLength: 100, placeholder: "New York" }}
 									invalidStringMessage={{
 										content: `
-											...
+											Please enter a valid city name. It should contain only letters, 
+											spaces, hyphens, or apostrophes.
 										`,
-										example: "Examples: ...",
+										example:
+											"Examples: New York, San Francisco, Winston-Salem, O'Fallon",
 									}}
 									autocompleteValue={handleAutocompleteValueCity()}
 								/>
@@ -315,6 +319,7 @@ const StaffForm = () => {
 									dataList={states}
 									placeholder="Select a state"
 									tooltipContent="Delete the state"
+									autocompleteValue={addressFound.address.state}
 								/>
 							</div>
 
@@ -325,9 +330,10 @@ const StaffForm = () => {
 								input={{ maxLength: 10, placeholder: "10001" }}
 								invalidStringMessage={{
 									content: `
-										...
+										Please enter a valid ZIP code. It should be a 5-digit number 
+										or a 9-digit number with a hyphen after the first 5 digits.
 									`,
-									example: "Examples: ...",
+									example: "Examples: 12345, 12345-6789",
 								}}
 								autocompleteValue={addressFound.address.postcode}
 							/>
@@ -344,7 +350,12 @@ const StaffForm = () => {
 					tooltipContent="Delete the department"
 				/>
 
-				<Button type="submit">Save</Button>
+				<Button
+					type="submit"
+					className="w-full"
+				>
+					Save
+				</Button>
 			</form>
 		</Form>
 	)
