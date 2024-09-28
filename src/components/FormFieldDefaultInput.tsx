@@ -30,14 +30,13 @@ const FormFieldDefaultInput = ({
 	})
 
 	useEffect(() => {
-		if (!hasUserEdited) {
-			if (field.value) {
-				field.onChange(field.value)
-			} else if (autocompleteValue) {
-				field.onChange(autocompleteValue)
-			}
+		if (
+			(!hasUserEdited && autocompleteValue) ||
+			(hasUserEdited && !field.value && autocompleteValue)
+		) {
+			field.onChange(autocompleteValue)
 		}
-	}, [autocompleteValue, field.value])
+	}, [autocompleteValue])
 
 	const handleInput = e => {
 		const newValue = e.target.value
