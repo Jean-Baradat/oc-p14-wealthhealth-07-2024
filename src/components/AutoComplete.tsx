@@ -30,7 +30,7 @@ import { Skeleton } from "@/components/shadcn/skeleton"
 import { useGetSearchQuery } from "@/store/ApiSlices"
 import { skipToken } from "@reduxjs/toolkit/query"
 import { useDispatch } from "react-redux"
-import { update } from "@/store/Slices"
+import { resetAddressFound, updateAddressFound } from "@/store/Slices"
 
 interface AutoCompleteProps {
 	placeholders: {
@@ -39,18 +39,11 @@ interface AutoCompleteProps {
 	}
 }
 
-interface Address {
-	place_id: string
-	display_name: string
-	address: object
-}
-
 const AutoComplete: FC<AutoCompleteProps> = ({
 	inputPlaceholder,
 	displayName,
 }) => {
 	const [open, setOpen] = useState(false)
-	const [selectedAddress, setSelectedAddress] = useState<Array<Address>>([])
 	const [inputValue, setInputValue] = useState<string>("")
 	const [debouncedSearchValue, setDebouncedSearchValue] = useState<string>("")
 	const isDesktop = useMediaQuery("(min-width: 768px)")
@@ -61,53 +54,23 @@ const AutoComplete: FC<AutoCompleteProps> = ({
 	)
 
 	useEffect(() => {
+		return () => {
+			dispatch(resetAddressFound())
+		}
+	}, [])
+
+	useEffect(() => {
 		const timeOutId = setTimeout(() => setDebouncedSearchValue(inputValue), 500)
 		return () => clearTimeout(timeOutId)
 	}, [inputValue])
 
-	useEffect(() => {
-		if (selectedAddress.length !== 0) {
-			dispatch(update({ addressFound: selectedAddress }))
-		}
-
-		return () => {
-			if (selectedAddress.length !== 0) {
-				dispatch(
-					update({
-						addressFound: {
-							...selectedAddress,
-							address: {
-								road: "",
-								city: "",
-								postcode: "",
-								house_number: "",
-								state: "",
-								town: "",
-								village: "",
-								municipality: "",
-								suburb: "",
-								borough: "",
-								city_district: "",
-								locality: "",
-								hamlet: "",
-								district: "",
-								subdivision: "",
-								quarter: "",
-								isolated_dwelling: "",
-							},
-						},
-					}),
-				)
-			}
-		}
-	}, [selectedAddress])
-
 	const handleSelectedAddress = address => {
-		setSelectedAddress({
-			address: address.address,
-			display_name: address.display_name,
-			place_id: address.place_id,
-		})
+		dispatch(
+			updateAddressFound({
+				address: address.address,
+				display_name: address.display_name,
+			}),
+		)
 		setOpen(false)
 		setDebouncedSearchValue("")
 	}
@@ -172,9 +135,7 @@ const AutoComplete: FC<AutoCompleteProps> = ({
 					aria-expanded={open}
 					className="w-full justify-between"
 				>
-					<span className="truncate">
-						{selectedAddress.display_name ?? displayName}
-					</span>
+					<span className="truncate">{displayName}</span>
 					<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 				</Button>
 			</PopoverTrigger>
@@ -205,9 +166,7 @@ const AutoComplete: FC<AutoCompleteProps> = ({
 					aria-expanded={open}
 					className="w-full justify-between"
 				>
-					<span className="truncate">
-						{selectedAddress.display_name ?? displayName}
-					</span>
+					<span className="truncate">{displayName}</span>
 					<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 				</Button>
 			</DrawerTrigger>

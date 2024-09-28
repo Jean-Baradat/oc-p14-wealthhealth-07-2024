@@ -4,14 +4,19 @@ import { z } from "zod"
 import { Button } from "@/components/shadcn/button"
 import { getMonthsList, getYearsList } from "@/utils/dateUtils"
 import { Form } from "@/components/shadcn/form"
-import { toast } from "@/components/shadcn/use-toast"
 import { useEffect, useMemo } from "react"
 import FormFieldDefaultInput from "@/components/FormFieldDefaultInput"
 import FormFieldDateInput from "@/components/FormFieldDateInput"
 import AutoComplete from "@/components/AutoComplete"
 import { useSelector, useDispatch } from "react-redux"
-import { staffFormStateData, update } from "@/store/Slices"
-import { merge } from "lodash"
+import {
+	staffFormFieldsState,
+	staffFormAddressFoundState,
+	StaffFormFields,
+	updateFormFields,
+	submitForm,
+	resetAddressFound,
+} from "@/store/Slices"
 import FormFieldSelect from "@/components/FormFieldSelect"
 import { states } from "@/db/states"
 import { departments } from "@/db/departments"
@@ -132,36 +137,44 @@ const StaffForm = () => {
 	const years = useMemo(() => getYearsList(), [])
 	const months = useMemo(() => getMonthsList(), [])
 	const dispatch = useDispatch()
-	const staffFormData = useSelector(staffFormStateData)
-	const { addressFound } = staffFormData
+	const staffFormFieldsData = useSelector(staffFormFieldsState)
+	const addressFound = useSelector(staffFormAddressFoundState)
+
+	const defaultValues: StaffFormFields = {
+		"first-name": "",
+		"last-name": "",
+		"date-of-birth": "",
+		"date-of-start": "",
+		street: "",
+		city: "",
+		state: "",
+		zipCode: "",
+		department: "",
+	}
 
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
-		defaultValues: staffFormData,
+		defaultValues: { ...defaultValues, ...staffFormFieldsData },
 	})
 
 	const {
 		handleSubmit,
 		getValues,
+		reset,
 		control,
 		formState: { errors },
 	} = form
 
 	useEffect(() => {
 		return () => {
-			dispatch(update(merge({}, staffFormData, getValues())))
+			dispatch(updateFormFields(getValues()))
 		}
 	}, [])
 
 	const onSubmit = (data: z.infer<typeof FormSchema>) => {
-		toast({
-			title: "You submitted the following values:",
-			description: (
-				<pre className="mt-2 w-[340px] overflow-x-auto rounded-md bg-slate-800 p-4">
-					<code className="text-white">{JSON.stringify(data, null, 2)}</code>
-				</pre>
-			),
-		})
+		dispatch(submitForm(data))
+		dispatch(resetAddressFound())
+		reset(defaultValues)
 	}
 
 	/**
@@ -251,7 +264,7 @@ const StaffForm = () => {
 					/>
 				</div>
 
-				<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+				<div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
 					<FormFieldDateInput
 						form={{ control, errors }}
 						name="date-of-birth"
@@ -296,7 +309,7 @@ const StaffForm = () => {
 								}}
 								autocompleteValue={handleAutocompleteValueStreet()}
 							/>
-							<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+							<div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
 								<FormFieldDefaultInput
 									form={{ control, errors }}
 									name="city"
