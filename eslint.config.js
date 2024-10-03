@@ -6,6 +6,7 @@ import pluginReactConfig from "eslint-plugin-react/configs/recommended.js"
 import { fixupConfigRules } from "@eslint/compat"
 import eslintPluginReact from "eslint-plugin-react"
 import eslintPluginReactRefresh from "eslint-plugin-react-refresh"
+import tailwind from "eslint-plugin-tailwindcss"
 
 export default [
 	// Specify the file extensions to lint
@@ -123,4 +124,5 @@ export default [
 			"react/react-in-jsx-scope": "off",
 		},
 	}),
+	...tailwind.configs["flat/recommended"],
 ]

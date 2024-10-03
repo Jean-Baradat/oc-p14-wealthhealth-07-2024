@@ -1,6 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit"
 
-export interface StaffFormFields {
+export type StaffFormFormSubmitted = {
+	"first-name"?: string
+	"last-name"?: string
+	"date-of-birth"?: string
+	"date-of-start"?: string
+	street?: string
+	city?: string
+	state?: string
+	zipCode?: string
+	department?: string
+}[]
+
+export type StaffFormFields = {
 	"first-name": string
 	"last-name": string
 	"date-of-birth": string
@@ -37,7 +49,7 @@ export interface StaffFormAddressFound {
 export interface StaffFormState {
 	formFields: StaffFormFields
 	addressFound: StaffFormAddressFound
-	formSubmitted: StaffFormFields
+	formSubmitted: StaffFormFormSubmitted
 }
 
 const initialState: StaffFormState = {
@@ -76,17 +88,7 @@ const initialState: StaffFormState = {
 		display_name: "Finding your address made easy",
 	},
 
-	formSubmitted: {
-		"first-name": "",
-		"last-name": "",
-		"date-of-birth": "",
-		"date-of-start": "",
-		street: "",
-		city: "",
-		state: "",
-		zipCode: "",
-		department: "",
-	},
+	formSubmitted: [],
 }
 
 export const staffFormSlice = createSlice({
@@ -100,7 +102,7 @@ export const staffFormSlice = createSlice({
 			Object.assign(state.addressFound, payload)
 		},
 		submitForm: (state, { payload }) => {
-			state.formSubmitted = payload
+			state.formSubmitted = [...state.formSubmitted, payload]
 		},
 		resetAddressFound: state => {
 			state.addressFound = initialState.addressFound
@@ -115,13 +117,16 @@ export const {
 	resetAddressFound,
 } = staffFormSlice.actions
 
-// { staffForm: StaffFormState }
-export const staffFormFieldsState = state => {
+export const staffFormFieldsState = (state: { staffForm: StaffFormState }) => {
 	return state.staffForm.formFields
 }
-export const staffFormAddressFoundState = state => {
+export const staffFormAddressFoundState = (state: {
+	staffForm: StaffFormState
+}) => {
 	return state.staffForm.addressFound
 }
-export const staffFormFormSubmittedState = state => {
+export const staffFormFormSubmittedState = (state: {
+	staffForm: StaffFormState
+}) => {
 	return state.staffForm.formSubmitted
 }

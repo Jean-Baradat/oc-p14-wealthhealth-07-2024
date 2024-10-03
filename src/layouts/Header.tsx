@@ -15,7 +15,7 @@ import ModeToggle from "@/components/ModeToggle"
 
 const Header = () => {
 	return (
-		<header className="sticky top-0 flex h-14 items-center justify-between gap-4 border-b bg-muted/40 px-4 backdrop-blur-sm md:justify-end lg:h-[60px] lg:px-6">
+		<header className="sticky top-0 z-10 flex h-14 items-center justify-between gap-4 border-b bg-muted/40 px-4 backdrop-blur-sm md:justify-end lg:h-[60px] lg:px-6">
 			<Sheet>
 				<SheetTrigger asChild>
 					<Button

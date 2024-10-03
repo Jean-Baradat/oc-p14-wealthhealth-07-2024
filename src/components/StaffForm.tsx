@@ -171,8 +171,16 @@ const StaffForm = () => {
 		}
 	}, [])
 
+	const generateKey = (data: StaffFormFields): string => {
+		const timestamp = Date.now()
+		const firstname = data["first-name"].toLowerCase().replace(/[^a-z0-9]/g, "")
+		const lastname = data["last-name"].toLowerCase().replace(/[^a-z0-9]/g, "")
+
+		return `${firstname}_${lastname}_${timestamp}`
+	}
+
 	const onSubmit = (data: z.infer<typeof FormSchema>) => {
-		dispatch(submitForm(data))
+		dispatch(submitForm({ ...data, key: generateKey(data) }))
 		dispatch(resetAddressFound())
 		reset(defaultValues)
 	}
@@ -227,7 +235,7 @@ const StaffForm = () => {
 		<Form {...form}>
 			<form
 				onSubmit={handleSubmit(onSubmit)}
-				className="mx-auto max-w-3xl space-y-6"
+				className="mx-auto max-w-3xl space-y-6 rounded border bg-background p-5 shadow-[-4px_9px_25px_-6px_rgba(0,0,0,0.1)]"
 			>
 				<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
 					<FormFieldDefaultInput
