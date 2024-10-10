@@ -10,7 +10,7 @@
 		"build:dev": "tsc --noEmitOnError false && vite build",
 		"build:prod": "tsc -b && eslint . --max-warnings=0 && vite build",
 		"lint": "eslint .",
-		"prettier": "prettier --write .",
+		"prettier:write": "prettier --write .",
 		"preview": "vite preview"
 	},
 	"dependencies": {
