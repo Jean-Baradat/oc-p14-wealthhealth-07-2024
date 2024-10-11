@@ -12,18 +12,24 @@ import {
 } from "@/components/shadcn/sheet"
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden"
 import ModeToggle from "@/components/ModeToggle"
+import { useState } from "react"
 
 const Header = () => {
+	const [open, setOpen] = useState(false)
+
 	return (
 		<header className="sticky top-0 z-10 flex h-14 items-center justify-between gap-4 border-b bg-muted/40 px-4 backdrop-blur-sm md:justify-end lg:h-[60px] lg:px-6">
-			<Sheet>
+			<Sheet
+				open={open}
+				onOpenChange={setOpen}
+			>
 				<SheetTrigger asChild>
 					<Button
 						variant="outline"
 						size="icon"
 						className="shrink-0 md:hidden"
 					>
-						<Menu className="h-5 w-5" />
+						<Menu className="size-5" />
 						<span className="sr-only">Toggle navigation menu</span>
 					</Button>
 				</SheetTrigger>
@@ -52,7 +58,7 @@ const Header = () => {
 									<img
 										src="./favicon-32x32.png"
 										alt="HRnet logo"
-										className="h-6 w-6"
+										className="size-6"
 									/>
 								</picture>
 								<span>HRnet</span>
@@ -70,28 +76,31 @@ const Header = () => {
 
 						<NavLink
 							to="/"
+							onClick={() => setOpen(false)}
 							className={({ isActive }) =>
-								`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 ${
+								`mx-[-0.65rem] flex items-center gap-4 rounded px-3 py-2 ${
 									isActive
 										? "bg-muted text-foreground hover:text-foreground"
 										: "text-muted-foreground"
 								}`
 							}
 						>
-							<Home className="h-5 w-5" />
+							<Home className="size-5" />
 							Dashboard
 						</NavLink>
+
 						<NavLink
 							to="/staff-list"
+							onClick={() => setOpen(false)}
 							className={({ isActive }) =>
-								`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 ${
+								`mx-[-0.65rem] flex items-center gap-4 rounded px-3 py-2 ${
 									isActive
 										? "bg-muted text-foreground hover:text-foreground"
 										: "text-muted-foreground"
 								}`
 							}
 						>
-							<List className="h-5 w-5" />
+							<List className="size-5" />
 							Staff list
 						</NavLink>
 					</nav>
@@ -104,7 +113,7 @@ const Header = () => {
 					size="icon"
 					className="rounded-full"
 				>
-					<CircleUser className="h-5 w-5" />
+					<CircleUser className="size-5" />
 				</Button>
 			</div>
 		</header>

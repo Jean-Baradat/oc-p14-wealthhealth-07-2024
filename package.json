@@ -11,7 +11,8 @@
 		"build:prod": "tsc -b && eslint . --max-warnings=0 && vite build",
 		"lint": "eslint .",
 		"prettier:write": "prettier --write .",
-		"preview": "vite preview"
+		"preview": "vite preview",
+		"preview:network": "vite preview --host"
 	},
 	"dependencies": {
 		"@hookform/resolvers": "^3.9.0",

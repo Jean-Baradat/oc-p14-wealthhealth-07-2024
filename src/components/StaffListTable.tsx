@@ -143,10 +143,10 @@ const StaffListTable = ({ data }: { data: any[] }) => {
 			<Input
 				onChange={handleSearchChange}
 				placeholder="Search anything..."
-				className="sticky top-[4.5rem] z-10 h-12 bg-background text-lg shadow-sm backdrop-blur-sm"
+				className="sticky top-[4.5rem] z-10 mb-2 h-12 bg-background text-lg shadow-sm backdrop-blur-sm"
 			/>
 
-			<div className="m-3 rounded border">
+			<div className="rounded border">
 				<Table>
 					<TableHeader className="bg-muted/50">
 						{table.getHeaderGroups().map(headerGroup => (
