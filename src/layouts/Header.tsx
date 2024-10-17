@@ -40,7 +40,7 @@ const Header = () => {
 					<SheetDescription>
 						<VisuallyHidden.Root>Navigation menu</VisuallyHidden.Root>
 					</SheetDescription>
-					<nav className="grid gap-2 text-lg font-medium">
+					<nav className="grid gap-3 text-lg font-medium">
 						<div className="mb-5 flex items-center justify-between">
 							<Link
 								to="/"
@@ -68,7 +68,7 @@ const Header = () => {
 									size={"icon"}
 									variant={null}
 								>
-									<X className="size-4" />
+									<X className="size-7" />
 									<span className="sr-only">Close</span>
 								</Button>
 							</SheetClose>
@@ -78,10 +78,10 @@ const Header = () => {
 							to="/"
 							onClick={() => setOpen(false)}
 							className={({ isActive }) =>
-								`mx-[-0.65rem] flex items-center gap-4 rounded px-3 py-2 ${
+								`flex items-center gap-4 rounded px-3 py-3 ${
 									isActive
-										? "bg-muted text-foreground hover:text-foreground"
-										: "text-muted-foreground"
+										? "bg-primary text-base font-bold tracking-wide text-muted"
+										: "bg-muted text-base font-bold tracking-wide text-muted-foreground"
 								}`
 							}
 						>
@@ -93,10 +93,10 @@ const Header = () => {
 							to="/staff-list"
 							onClick={() => setOpen(false)}
 							className={({ isActive }) =>
-								`mx-[-0.65rem] flex items-center gap-4 rounded px-3 py-2 ${
+								`flex items-center gap-4 rounded px-3 py-3 ${
 									isActive
-										? "bg-muted text-foreground hover:text-foreground"
-										: "text-muted-foreground"
+										? "bg-primary text-base font-bold tracking-wide text-muted"
+										: "bg-muted text-base font-bold tracking-wide text-muted-foreground"
 								}`
 							}
 						>
