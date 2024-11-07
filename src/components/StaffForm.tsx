@@ -25,8 +25,7 @@ import {
 	DialogTrigger,
 	DialogContent,
 	handleDialog,
-} from "@jean/rc-dialog"
-import "/node_modules/@jean/rc-dialog/dist/style.css"
+} from "@jean_b/rc-dialog"
 
 /**
  * Validation schema for the staff form.
@@ -389,37 +388,17 @@ const StaffForm = () => {
 					isOpen={isOpen}
 					setIsOpen={setIsOpen}
 				>
-					<DialogTrigger onClick>
+					<DialogTrigger customEvent>
 						<Button
 							type="submit"
 							className="w-full"
+							size={"lg"}
 						>
 							Save
 						</Button>
 					</DialogTrigger>
-					<DialogContent
-						titleId="dialogTitle"
-						descriptionId="dialogDescription"
-					>
-						<h1
-							id="dialogTitle"
-							className="pb-3 text-2xl font-semibold"
-						>
-							Lorem, ipsum dolor.
-						</h1>
-						<p
-							id="dialogDescription"
-							className="pb-3"
-						>
-							Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-							Accusamus error voluptatibus eligendi expedita cum dignissimos
-							repellat dolorum pariatur laboriosam, quos doloribus, ab est
-							placeat nobis ex incidunt adipisci dolore doloremque.
-						</p>
-						<div className="flex gap-4">
-							<Button className="flex-1">Lorem, ipsum.</Button>
-							<Button className="flex-1">Lorem, ipsum dolor.</Button>
-						</div>
+					<DialogContent descriptionId="dialogDescription">
+						<p id="dialogDescription">Employee Created!</p>
 					</DialogContent>
 				</Dialog>
 			</form>
