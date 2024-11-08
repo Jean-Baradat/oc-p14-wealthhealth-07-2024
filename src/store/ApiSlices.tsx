@@ -1,24 +1,40 @@
 import { createApi } from "@reduxjs/toolkit/query/react"
-import axios from "axios"
+import axios, { AxiosError } from "axios"
 
-const axiosBaseQuery = ({ baseUrl } = { baseUrl: "" }) => {
-	return async ({ url, method, data, headers, body, params }) => {
+interface RequestParams {
+	url: string
+	method: "GET" | "POST" | "PUT" | "DELETE"
+	params?: Record<string, string | number>
+}
+
+const axiosBaseQuery = ({ baseUrl }: { baseUrl: string } = { baseUrl: "" }) => {
+	return async ({
+		url,
+		method,
+		params,
+	}: RequestParams): Promise<
+		| {
+				data: []
+		  }
+		| {
+				error: { status: number | undefined; data: string | object }
+		  }
+	> => {
 		try {
 			const result = await axios({
 				url: baseUrl + url,
 				method,
-				data,
-				headers,
-				body,
 				params,
 			})
 
 			return { data: result.data }
 		} catch (axiosError) {
+			const error = axiosError as AxiosError
+
 			return {
 				error: {
-					status: axiosError.response?.status,
-					data: axiosError.response?.data || axiosError.message,
+					status: error.response?.status,
+					data: error.response?.data || error.message,
 				},
 			}
 		}

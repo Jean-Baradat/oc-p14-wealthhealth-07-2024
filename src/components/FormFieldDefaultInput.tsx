@@ -13,6 +13,13 @@ import { CircleHelp, OctagonAlert } from "lucide-react"
 import { NavLink } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { useController } from "react-hook-form"
+import { StaffFormFieldsType } from "@/components/StaffForm"
+
+interface FormFieldDefaultInputProps extends StaffFormFieldsType {
+	input: { maxLength: number; placeholder: string }
+	invalidStringMessage: { content: string; example: string }
+	autocompleteValue?: string
+}
 
 const FormFieldDefaultInput = ({
 	form,
@@ -21,7 +28,7 @@ const FormFieldDefaultInput = ({
 	input,
 	invalidStringMessage,
 	autocompleteValue = "",
-}) => {
+}: FormFieldDefaultInputProps) => {
 	const [hasUserEdited, setHasUserEdited] = useState(false)
 
 	const { field } = useController({
@@ -38,7 +45,7 @@ const FormFieldDefaultInput = ({
 		}
 	}, [autocompleteValue])
 
-	const handleInput = e => {
+	const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const newValue = e.target.value
 
 		setHasUserEdited(true)

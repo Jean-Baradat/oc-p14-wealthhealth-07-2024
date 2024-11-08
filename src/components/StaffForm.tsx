@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { Control, FieldErrors, useForm } from "react-hook-form"
 import { z } from "zod"
 import { Button } from "@/components/shadcn/button"
 import { getMonthsList, getYearsList } from "@/utils/dateUtils"
@@ -12,7 +12,6 @@ import { useSelector, useDispatch } from "react-redux"
 import {
 	staffFormFieldsState,
 	staffFormAddressFoundState,
-	StaffFormFields,
 	updateFormFields,
 	submitForm,
 	resetAddressFound,
@@ -139,6 +138,32 @@ const FormSchema = z.object({
 	}),
 })
 
+type StaffFormFields = z.infer<typeof FormSchema>
+
+export interface StaffFormFieldsType {
+	form: {
+		control: Control<StaffFormFields>
+		errors: FieldErrors
+	}
+	name: keyof StaffFormFields
+	label: string
+}
+
+type CityTypeType =
+	| "city"
+	| "town"
+	| "village"
+	| "municipality"
+	| "suburb"
+	| "borough"
+	| "city_district"
+	| "locality"
+	| "hamlet"
+	| "district"
+	| "subdivision"
+	| "quarter"
+	| "isolated_dwelling"
+
 const StaffForm = () => {
 	const years = useMemo(() => getYearsList(), [])
 	const months = useMemo(() => getMonthsList(), [])
@@ -159,6 +184,22 @@ const StaffForm = () => {
 		zipCode: "",
 		department: "",
 	}
+
+	const CITY_TYPE_HIERARCHY: string[] = [
+		"city",
+		"town",
+		"village",
+		"municipality",
+		"suburb",
+		"borough",
+		"city_district",
+		"locality",
+		"hamlet",
+		"district",
+		"subdivision",
+		"quarter",
+		"isolated_dwelling",
+	]
 
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
@@ -215,26 +256,13 @@ const StaffForm = () => {
 	 * @returns {string} The city name if found, or an empty string if no suitable city name is available
 	 */
 	const handleAutocompleteValueCity = (): string => {
-		const address = addressFound.address
-		const cityHierarchy = [
-			"city",
-			"town",
-			"village",
-			"municipality",
-			"suburb",
-			"borough",
-			"city_district",
-			"locality",
-			"hamlet",
-			"district",
-			"subdivision",
-			"quarter",
-			"isolated_dwelling",
-		]
+		const { address } = addressFound
 
-		for (const key of cityHierarchy) {
-			if (address[key] && address[key].trim() !== "") {
-				return address[key]
+		for (const cityType of CITY_TYPE_HIERARCHY) {
+			const cityTypeAdress = cityType as CityTypeType
+
+			if (address[cityTypeAdress] && address[cityTypeAdress].trim() !== "") {
+				return address[cityTypeAdress]
 			}
 		}
 
@@ -256,11 +284,11 @@ const StaffForm = () => {
 							input={{ maxLength: 30, placeholder: "John" }}
 							invalidStringMessage={{
 								content: `
-								Please enter only letters, with or without accents.
-								You can include spaces, hyphens or an apostrophe between words. 
-								Your entry must not exceed three words. Trim any leading 
-								or trailing spaces from your input.
-							`,
+									Please enter only letters, with or without accents.
+									You can include spaces, hyphens or an apostrophe between words. 
+									Your entry must not exceed three words. Trim any leading 
+									or trailing spaces from your input.
+								`,
 								example:
 									"Examples: Jean-Pierre, O'Connor, محمد, Иван, María José D.",
 							}}
@@ -273,11 +301,11 @@ const StaffForm = () => {
 							input={{ maxLength: 30, placeholder: "Doe" }}
 							invalidStringMessage={{
 								content: `
-								Please enter only letters, with or without accents.
-								You can include spaces, hyphens or an apostrophe
-								between words. Your entry must not exceed three words.
-								Trim any leading or trailing spaces from your input.
-							`,
+									Please enter only letters, with or without accents.
+									You can include spaces, hyphens or an apostrophe
+									between words. Your entry must not exceed three words.
+									Trim any leading or trailing spaces from your input.
+								`,
 								example:
 									"Examples: Dubois, Fitzgerald, الحسن, Петров, Rodríguez",
 							}}
@@ -320,10 +348,10 @@ const StaffForm = () => {
 									input={{ maxLength: 100, placeholder: "1234 Main St" }}
 									invalidStringMessage={{
 										content: `
-										Please enter a valid address, starting with its number, 
-										then its name and type, and other information if necessary. 
-										You can include spaces, hyphens, commas, dots or a pound sign.
-									`,
+											Please enter a valid address, starting with its number, 
+											then its name and type, and other information if necessary. 
+											You can include spaces, hyphens, commas, dots or a pound sign.
+										`,
 										example:
 											"Exemples : 123 Main St, 42 Broadway Ave #1234, 1600 Pennsylvania Avenue NW",
 									}}
@@ -337,9 +365,9 @@ const StaffForm = () => {
 										input={{ maxLength: 100, placeholder: "New York" }}
 										invalidStringMessage={{
 											content: `
-											Please enter a valid city name. It should contain only letters, 
-											spaces, hyphens, or apostrophes.
-										`,
+												Please enter a valid city name. It should contain only letters, 
+												spaces, hyphens, or apostrophes.
+											`,
 											example:
 												"Examples: New York, San Francisco, Winston-Salem, O'Fallon",
 										}}
@@ -363,9 +391,9 @@ const StaffForm = () => {
 									input={{ maxLength: 10, placeholder: "10001" }}
 									invalidStringMessage={{
 										content: `
-										Please enter a valid ZIP code. It should be a 5-digit number 
-										or a 9-digit number with a hyphen after the first 5 digits.
-									`,
+											Please enter a valid ZIP code. It should be a 5-digit number 
+											or a 9-digit number with a hyphen after the first 5 digits.
+										`,
 										example: "Examples: 12345, 12345-6789",
 									}}
 									autocompleteValue={addressFound.address.postcode}

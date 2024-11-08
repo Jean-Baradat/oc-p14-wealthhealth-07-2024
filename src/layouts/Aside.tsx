@@ -22,7 +22,7 @@ const Aside = () => {
 							<img
 								src="./favicon-32x32.png"
 								alt="HRnet logo"
-								className="h-6 w-6"
+								className="size-6"
 							/>
 						</picture>
 						<span>HRnet</span>

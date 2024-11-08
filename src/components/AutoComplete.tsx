@@ -1,5 +1,4 @@
-import { FC, useEffect, useState } from "react"
-
+import { useEffect, useState } from "react"
 import { useMediaQuery } from "@/hooks/useMediaQuery"
 import { Button } from "@/components/shadcn/button"
 import {
@@ -32,16 +31,19 @@ import { skipToken } from "@reduxjs/toolkit/query"
 import { useDispatch } from "react-redux"
 import { resetAddressFound, updateAddressFound } from "@/store/Slices"
 
-interface AutoCompleteProps {
-	placeholders: {
-		input: string
-		button: string
-	}
+type AddressData = {
+	place_id: number
+	display_name: string
+	address: Record<string, string>
+	[key: string]: unknown
 }
 
-const AutoComplete: FC<AutoCompleteProps> = ({
+const AutoComplete = ({
 	inputPlaceholder,
 	displayName,
+}: {
+	inputPlaceholder: string
+	displayName: string
 }) => {
 	const [open, setOpen] = useState(false)
 	const [inputValue, setInputValue] = useState<string>("")
@@ -64,7 +66,7 @@ const AutoComplete: FC<AutoCompleteProps> = ({
 		return () => clearTimeout(timeOutId)
 	}, [inputValue])
 
-	const handleSelectedAddress = address => {
+	const handleSelectedAddress = (address: AddressData) => {
 		dispatch(
 			updateAddressFound({
 				address: address.address,
@@ -107,7 +109,7 @@ const AutoComplete: FC<AutoCompleteProps> = ({
 					<>
 						<CommandEmpty>No results, please try searching.</CommandEmpty>
 						<CommandGroup className="p-1">
-							{data.map(address => (
+							{data.map((address: AddressData) => (
 								<CommandItem
 									key={address.place_id}
 									value={address.display_name}
@@ -136,7 +138,7 @@ const AutoComplete: FC<AutoCompleteProps> = ({
 					className="w-full justify-between"
 				>
 					<span className="truncate">{displayName}</span>
-					<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+					<ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent
@@ -167,7 +169,7 @@ const AutoComplete: FC<AutoCompleteProps> = ({
 					className="w-full justify-between"
 				>
 					<span className="truncate">{displayName}</span>
-					<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+					<ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
 				</Button>
 			</DrawerTrigger>
 

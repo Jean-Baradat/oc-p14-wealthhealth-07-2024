@@ -1,7 +1,6 @@
 import { Outlet } from "react-router"
 import Aside from "@/layouts/Aside"
 import Header from "@/layouts/Header"
-import { Toaster } from "@/components/shadcn/toaster"
 
 const Layout = () => {
 	return (
@@ -14,7 +13,6 @@ const Layout = () => {
 			<div className="flex flex-col">
 				<Header />
 				<Outlet />
-				<Toaster />
 			</div>
 		</div>
 	)

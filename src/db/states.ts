@@ -1,4 +1,4 @@
-type State = {
+export type State = {
 	key: string
 	label: string
 	value: string

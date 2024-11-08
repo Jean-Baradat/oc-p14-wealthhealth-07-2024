@@ -1,5 +1,5 @@
 import { Link, NavLink } from "react-router-dom"
-import { CircleUser, Home, Menu, List, X } from "lucide-react"
+import { CircleUser, Home, Menu, List, X, ExternalLinkIcon } from "lucide-react"
 
 import { Button } from "@/components/shadcn/button"
 import {
@@ -13,9 +13,11 @@ import {
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden"
 import ModeToggle from "@/components/ModeToggle"
 import { useState } from "react"
+import { siGithub } from "simple-icons"
 
 const Header = () => {
 	const [open, setOpen] = useState(false)
+	const [isHovered, setIsHovered] = useState(false)
 
 	return (
 		<header className="sticky top-0 z-10 flex h-14 items-center justify-between gap-4 border-b bg-muted/40 px-4 backdrop-blur-sm md:justify-end lg:h-[60px] lg:px-6">
@@ -107,6 +109,47 @@ const Header = () => {
 				</SheetContent>
 			</Sheet>
 			<div className="flex gap-3">
+				<Button
+					variant="secondary"
+					size="icon"
+					className="relative overflow-hidden rounded-full transition-all duration-300 ease-in-out"
+					onMouseEnter={() => setIsHovered(true)}
+					onMouseLeave={() => setIsHovered(false)}
+					aria-label="Project GitHub"
+					style={{
+						width: isHovered ? "125px" : "",
+					}}
+					asChild
+				>
+					<a
+						href="https://github.com/Jean-Baradat/oc-p14-wealthhealth-07-2024"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						<div className="absolute inset-y-0 left-0 flex w-10 items-center justify-center">
+							<svg
+								viewBox="0 0 24 24"
+								xmlns="http://www.w3.org/2000/svg"
+								fill="currentColor"
+								width="20"
+								height="20"
+							>
+								<path d={siGithub.path} />
+							</svg>
+						</div>
+						<div
+							className="absolute inset-y-0 left-10 flex items-center transition-opacity duration-300 ease-in-out"
+							style={{
+								opacity: isHovered ? 1 : 0,
+							}}
+						>
+							<p className="flex w-full items-center justify-between gap-2 whitespace-nowrap font-semibold">
+								<span>GitHub</span>
+								<ExternalLinkIcon className="size-3.5" />
+							</p>
+						</div>
+					</a>
+				</Button>
 				<ModeToggle />
 				<Button
 					variant="secondary"

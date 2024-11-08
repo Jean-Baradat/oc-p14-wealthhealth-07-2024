@@ -1,8 +1,18 @@
+export type getYearsListProps = {
+	value: string
+	key: string
+}[]
+
+export type getMonthsListProps = {
+	value: string
+	monthNumber: string
+	key: string
+}[]
+
 /**
- *
- * @returns
+ * Return a list of years with a key
  */
-export const getYearsList = () => {
+export const getYearsList = (): getYearsListProps => {
 	return Array.from(
 		{ length: new Date().getFullYear() - 1900 + 1 },
 		(_, i) => 1900 + i,
@@ -17,10 +27,9 @@ export const getYearsList = () => {
 }
 
 /**
- *
- * @returns
+ * Return a list of months with a number and a key
  */
-export const getMonthsList = () => {
+export const getMonthsList = (): getMonthsListProps => {
 	const months = [
 		"January",
 		"February",

@@ -23,22 +23,39 @@ import {
 	SelectValue,
 } from "@/components/shadcn/select"
 import { useState } from "react"
+import { ControllerRenderProps } from "react-hook-form"
+import { StaffFormFields } from "@/store/Slices"
+import { getMonthsListProps, getYearsListProps } from "@/utils/dateUtils"
+import { StaffFormFieldsType } from "@/components/StaffForm"
 
-const FormFieldDateInput = ({ form, name, label, years, months, input }) => {
+interface FormFieldDateInputProps extends StaffFormFieldsType {
+	years: getYearsListProps
+	months: getMonthsListProps
+	input: { maxLength: number; placeholder: string }
+}
+
+type SelectedDateReturn<T> = T extends Date
+	? Date | undefined
+	: string | undefined
+
+const FormFieldDateInput = ({
+	form,
+	name,
+	label,
+	years,
+	months,
+	input,
+}: FormFieldDateInputProps) => {
 	const [date, setDate] = useState<Date | null>(null)
-
-	// console.log(date)
 
 	/**
 	 * Handles the selection of a year from the years dropdown
 	 * Updates the date state and the form field value
-	 *
-	 * @param {string} year - The selected year value as a string
-	 * @param {Object} field - The form field object
-	 *
-	 * @returns {void}
 	 */
-	const handleYearsSelect = (year, field) => {
+	const handleYearsSelect = (
+		year: string,
+		field: ControllerRenderProps<StaffFormFields>,
+	) => {
 		const selectedYear = parseInt(year)
 		let newDate = null
 
@@ -55,13 +72,11 @@ const FormFieldDateInput = ({ form, name, label, years, months, input }) => {
 	/**
 	 * Handles the selection of a month from the months dropdown
 	 * Updates the date state and the form field value
-	 *
-	 * @param {string} month - The selected month value as a string
-	 * @param {Object} field - The form field object
-	 *
-	 * @returns {void}
 	 */
-	const handleMonthsSelect = (month, field) => {
+	const handleMonthsSelect = (
+		month: string,
+		field: ControllerRenderProps<StaffFormFields>,
+	) => {
 		const selectedMonth = parseInt(month) - 1
 		let newDate = null
 
@@ -78,13 +93,11 @@ const FormFieldDateInput = ({ form, name, label, years, months, input }) => {
 	/**
 	 * Handles the input change event for the date input field
 	 * Updates the date state and the form field value if the input is a valid date
-	 *
-	 * @param {Object} e - The input change event object
-	 * @param {Object} field - The form field object
-	 *
-	 * @returns {void}
 	 */
-	const handleInput = (e, field) => {
+	const handleInput = (
+		e: React.ChangeEvent<HTMLInputElement>,
+		field: ControllerRenderProps<StaffFormFields>,
+	) => {
 		const inputDate = new Date(e.target.value)
 
 		if (
@@ -102,26 +115,21 @@ const FormFieldDateInput = ({ form, name, label, years, months, input }) => {
 	/**
 	 * Handles the calendar date selection
 	 * Updates the date state and the form field value if the selected value is a valid date
-	 *
-	 * @param {Date} value - The selected date value
-	 * @param {Object} field - The form field object
-	 *
-	 * @returns {void}
 	 */
-	const handleCalendar = (value, field) => {
+	const handleCalendar = (
+		value: Date | undefined,
+		field: ControllerRenderProps<StaffFormFields>,
+	) => {
 		if (value instanceof Date && !isNaN(value.getTime())) {
 			setDate(value)
 			field.onChange(format(value, "MM-dd-yyyy"))
 		}
 	}
 
-	/**
-	 *
-	 * @param fieldValue
-	 * @param type
-	 * @returns
-	 */
-	const handleSelectedDateCalendar = (fieldValue, type) => {
+	const handleSelectedDateCalendar = <T extends Date | string>(
+		fieldValue: string,
+		type: "year" | "month" | "calendar",
+	): SelectedDateReturn<T> => {
 		const fieldDate = new Date(fieldValue)
 		const isValidDate = fieldDate instanceof Date && !isNaN(fieldDate.getTime())
 		const isFutureDate = fieldDate > new Date()
@@ -129,27 +137,27 @@ const FormFieldDateInput = ({ form, name, label, years, months, input }) => {
 		if (date) {
 			switch (type) {
 				case "calendar":
-					return date
+					return date as SelectedDateReturn<T>
 				case "month":
-					return format(date, "M")
+					return format(date, "M") as SelectedDateReturn<T>
 				case "year":
-					return format(date, "yyyy")
+					return format(date, "yyyy") as SelectedDateReturn<T>
 			}
 		}
 
 		if (!isValidDate || isFutureDate) {
-			return type === "calendar" ? null : undefined
+			return (type === "calendar" ? null : undefined) as SelectedDateReturn<T>
 		}
 
 		switch (type) {
 			case "calendar":
-				return fieldDate
+				return fieldDate as SelectedDateReturn<T>
 			case "month":
-				return format(fieldDate, "M")
+				return format(fieldDate, "M") as SelectedDateReturn<T>
 			case "year":
-				return format(fieldDate, "yyyy")
+				return format(fieldDate, "yyyy") as SelectedDateReturn<T>
 			default:
-				return null
+				return undefined as SelectedDateReturn<T>
 		}
 	}
 
@@ -169,10 +177,7 @@ const FormFieldDateInput = ({ form, name, label, years, months, input }) => {
 						<div className="flex gap-2">
 							<Popover>
 								<PopoverTrigger asChild>
-									<Button
-										variant={"outline"}
-										className={!date && "text-muted-foreground"}
-									>
+									<Button variant={"outline"}>
 										<CalendarIcon className="size-4" />
 									</Button>
 								</PopoverTrigger>
@@ -184,11 +189,14 @@ const FormFieldDateInput = ({ form, name, label, years, months, input }) => {
 									<div className="flex gap-3">
 										<Select
 											onValueChange={year => handleYearsSelect(year, field)}
-											defaultValue={handleSelectedDateCalendar(
+											defaultValue={handleSelectedDateCalendar<string>(
 												field.value,
 												"year",
 											)}
-											value={handleSelectedDateCalendar(field.value, "year")}
+											value={handleSelectedDateCalendar<string>(
+												field.value,
+												"year",
+											)}
 										>
 											<SelectTrigger>
 												<SelectValue placeholder="Select Year" />
@@ -211,11 +219,14 @@ const FormFieldDateInput = ({ form, name, label, years, months, input }) => {
 										</Select>
 										<Select
 											onValueChange={month => handleMonthsSelect(month, field)}
-											defaultValue={handleSelectedDateCalendar(
+											defaultValue={handleSelectedDateCalendar<string>(
 												field.value,
 												"month",
 											)}
-											value={handleSelectedDateCalendar(field.value, "month")}
+											value={handleSelectedDateCalendar<string>(
+												field.value,
+												"month",
+											)}
 										>
 											<SelectTrigger>
 												<SelectValue placeholder="Select Month" />
@@ -239,11 +250,11 @@ const FormFieldDateInput = ({ form, name, label, years, months, input }) => {
 									</div>
 									<Calendar
 										mode="single"
-										selected={handleSelectedDateCalendar(
+										selected={handleSelectedDateCalendar<Date>(
 											field.value,
 											"calendar",
 										)}
-										defaultMonth={handleSelectedDateCalendar(
+										defaultMonth={handleSelectedDateCalendar<Date>(
 											field.value,
 											"calendar",
 										)}

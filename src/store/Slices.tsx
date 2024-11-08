@@ -1,16 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit"
 
 export type StaffFormFormSubmitted = {
-	"first-name"?: string
-	"last-name"?: string
-	"date-of-birth"?: string
-	"date-of-start"?: string
-	street?: string
-	city?: string
-	state?: string
-	zipCode?: string
-	department?: string
-}[]
+	"first-name": string
+	"last-name": string
+	"date-of-birth": string
+	"date-of-start": string
+	street: string
+	city: string
+	state: string
+	zipCode: string
+	department: string
+	key: string
+}
 
 export type StaffFormFields = {
 	"first-name": string
@@ -46,10 +47,11 @@ export interface StaffFormAddressFound {
 	}
 	display_name: string
 }
+
 export interface StaffFormState {
 	formFields: StaffFormFields
 	addressFound: StaffFormAddressFound
-	formSubmitted: StaffFormFormSubmitted
+	formSubmitted: StaffFormFormSubmitted[]
 }
 
 const initialState: StaffFormState = {
@@ -101,7 +103,7 @@ export const staffFormSlice = createSlice({
 		updateAddressFound: (state, { payload }) => {
 			Object.assign(state.addressFound, payload)
 		},
-		submitForm: (state, { payload }) => {
+		submitForm: (state, { payload }: { payload: StaffFormFormSubmitted }) => {
 			state.formSubmitted = [...state.formSubmitted, payload]
 		},
 		resetAddressFound: state => {

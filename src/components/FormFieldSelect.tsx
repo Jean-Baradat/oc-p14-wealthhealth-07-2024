@@ -23,11 +23,20 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/shadcn/tooltip"
+import { StaffFormFieldsType } from "@/components/StaffForm"
+import { State } from "@/db/states"
 
 type dataListItem = {
 	key: string
 	label: string
 	value: string
+}
+
+interface FormFieldSelectProps extends StaffFormFieldsType {
+	autocompleteValue?: string
+	dataList: State[]
+	placeholder: string
+	tooltipContent: string
 }
 
 const FormFieldSelect = ({
@@ -38,7 +47,7 @@ const FormFieldSelect = ({
 	dataList,
 	placeholder,
 	tooltipContent,
-}) => {
+}: FormFieldSelectProps) => {
 	const [hasUserEdited, setHasUserEdited] = useState(false)
 
 	const { field } = useController({

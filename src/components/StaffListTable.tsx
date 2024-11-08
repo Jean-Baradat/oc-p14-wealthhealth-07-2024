@@ -36,8 +36,9 @@ import {
 import { useState } from "react"
 import { format, parseISO } from "date-fns"
 import { Input } from "@/components/shadcn/input"
+import { StaffFormFields, StaffFormFormSubmitted } from "@/store/Slices"
 
-const StaffListTable = ({ data }: { data: any[] }) => {
+const StaffListTable = ({ data }: { data: StaffFormFormSubmitted[] }) => {
 	const [pagination, setPagination] = useState({
 		pageIndex: 0,
 		pageSize: 5,
@@ -66,11 +67,11 @@ const StaffListTable = ({ data }: { data: any[] }) => {
 		})
 	}
 
-	const handleSearchChange = e => {
+	const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		table.setGlobalFilter(String(e.target.value))
 	}
 
-	const columns: ColumnDef<any>[] = [
+	const columns: ColumnDef<StaffFormFields>[] = [
 		{
 			accessorKey: "first-name",
 			header: "First Name",

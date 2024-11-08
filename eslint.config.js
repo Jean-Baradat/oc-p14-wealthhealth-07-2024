@@ -104,7 +104,7 @@ export default [
 					avoidEscape: true,
 				},
 			],
-			indent: ["error", "tab"],
+			indent: ["error", "tab", { SwitchCase: 1 }],
 			semi: ["error", "never"],
 			"linebreak-style": ["error", "unix"],
 		},
