@@ -239,8 +239,6 @@ const StaffForm = () => {
 	/**
 	 * Constructs a street address string from the found address data.
 	 * Combines the house number and road name if available.
-	 *
-	 * @returns {string} The formatted street address
 	 */
 	const handleAutocompleteValueStreet = (): string => {
 		const house_number = addressFound.address.house_number
@@ -252,8 +250,6 @@ const StaffForm = () => {
 	/**
 	 * Retrieves the city name from the found address data.
 	 * Searches through a hierarchy of address components to find the most appropriate city name.
-	 *
-	 * @returns {string} The city name if found, or an empty string if no suitable city name is available
 	 */
 	const handleAutocompleteValueCity = (): string => {
 		const { address } = addressFound

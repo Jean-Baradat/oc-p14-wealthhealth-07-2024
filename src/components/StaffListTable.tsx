@@ -9,6 +9,7 @@ import {
 } from "@/components/shadcn/table"
 
 import {
+	Column,
 	ColumnDef,
 	flexRender,
 	getCoreRowModel,
@@ -32,11 +33,35 @@ import {
 	ChevronRightIcon,
 	ChevronsRightIcon,
 	ChevronsLeftIcon,
+	ArrowUp,
+	ArrowDown,
 } from "lucide-react"
 import { useState } from "react"
 import { format, parseISO } from "date-fns"
 import { Input } from "@/components/shadcn/input"
 import { StaffFormFields, StaffFormFormSubmitted } from "@/store/Slices"
+
+const HeaderButton = (
+	column: Column<StaffFormFields, unknown>,
+	ColName: string,
+) => {
+	return (
+		<Button
+			variant="link"
+			className="px-1 font-bold"
+			onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+		>
+			{ColName}
+			{column.getIsSorted() === "asc" ? (
+				<ArrowUp className="ml-1 size-4" />
+			) : column.getIsSorted() === "desc" ? (
+				<ArrowDown className="ml-1 size-4" />
+			) : (
+				<div className="ml-1 size-4"></div>
+			)}
+		</Button>
+	)
+}
 
 const StaffListTable = ({ data }: { data: StaffFormFormSubmitted[] }) => {
 	const [pagination, setPagination] = useState({
@@ -74,51 +99,69 @@ const StaffListTable = ({ data }: { data: StaffFormFormSubmitted[] }) => {
 	const columns: ColumnDef<StaffFormFields>[] = [
 		{
 			accessorKey: "first-name",
-			header: "First Name",
+			header: ({ column }) => {
+				return HeaderButton(column, "First Name")
+			},
 			accessorFn: row => {
 				return firstLetterUppercase(row["first-name"])
 			},
 		},
 		{
 			accessorKey: "last-name",
-			header: "Last Name",
+			header: ({ column }) => {
+				return HeaderButton(column, "Last Name")
+			},
 			accessorFn: row => {
 				return firstLetterUppercase(row["last-name"])
 			},
 		},
 		{
 			accessorKey: "date-of-start",
-			header: "Start Date",
+			header: ({ column }) => {
+				return HeaderButton(column, "Start Date")
+			},
 			accessorFn: row => {
 				return formatDate(row["date-of-start"])
 			},
 		},
 		{
+			header: ({ column }) => {
+				return HeaderButton(column, "Department")
+			},
 			accessorKey: "department",
-			header: "Department",
 		},
 		{
 			accessorKey: "date-of-birth",
-			header: "Date of Birth",
+			header: ({ column }) => {
+				return HeaderButton(column, "Date of Birth")
+			},
 			accessorFn: row => {
 				return formatDate(row["date-of-birth"])
 			},
 		},
 		{
 			accessorKey: "street",
-			header: "Street",
+			header: ({ column }) => {
+				return HeaderButton(column, "Street")
+			},
 		},
 		{
 			accessorKey: "city",
-			header: "City",
+			header: ({ column }) => {
+				return HeaderButton(column, "City")
+			},
 		},
 		{
 			accessorKey: "state",
-			header: "State",
+			header: ({ column }) => {
+				return HeaderButton(column, "State")
+			},
 		},
 		{
 			accessorKey: "zipCode",
-			header: "Zip Code",
+			header: ({ column }) => {
+				return HeaderButton(column, "Zip Code")
+			},
 		},
 	]
 
@@ -144,18 +187,18 @@ const StaffListTable = ({ data }: { data: StaffFormFormSubmitted[] }) => {
 			<Input
 				onChange={handleSearchChange}
 				placeholder="Search anything..."
-				className="sticky top-[4.5rem] z-10 mb-2 h-12 bg-background text-lg shadow-sm backdrop-blur-sm"
+				className="sticky top-[4.5rem] z-10 mb-2 h-12 border-muted-foreground/50 bg-background text-lg shadow-sm"
 			/>
 
 			<div className="rounded border">
 				<Table>
-					<TableHeader className="bg-muted/50">
+					<TableHeader className="bg-muted">
 						{table.getHeaderGroups().map(headerGroup => (
 							<TableRow key={headerGroup.id}>
 								{headerGroup.headers.map(header => (
 									<TableHead
 										key={header.id}
-										className="text-nowrap font-bold"
+										className="p-2"
 									>
 										{flexRender(
 											header.column.columnDef.header,
@@ -172,7 +215,10 @@ const StaffListTable = ({ data }: { data: StaffFormFormSubmitted[] }) => {
 							table.getRowModel().rows.map(row => (
 								<TableRow key={row.id}>
 									{row.getVisibleCells().map(cell => (
-										<TableCell key={cell.id}>
+										<TableCell
+											key={cell.id}
+											className="px-3"
+										>
 											{flexRender(
 												cell.column.columnDef.cell,
 												cell.getContext(),
@@ -234,7 +280,7 @@ const StaffListTable = ({ data }: { data: StaffFormFormSubmitted[] }) => {
 										Page {table.getState().pagination.pageIndex + 1} of{" "}
 										{table.getPageCount()}
 									</div>
-									<div className="flex items-center space-x-2">
+									<div className="flex items-center space-x-1">
 										<Button
 											variant="outline"
 											className="hidden size-8 p-0 xl:flex"

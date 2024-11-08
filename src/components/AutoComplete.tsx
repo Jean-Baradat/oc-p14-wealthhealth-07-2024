@@ -180,17 +180,17 @@ const AutoComplete = ({
 						Find your address
 					</DrawerDescription>
 				</DrawerHeader>
-				<Command>
-					<CommandInput
-						placeholder={inputPlaceholder}
-						onValueChange={setInputValue}
-						value={inputValue}
-						className="placeholder:opacity-50"
-					/>
-					<CommandList className="max-h-none">
-						{renderCommandListContent()}
-					</CommandList>
-				</Command>
+				<div className="p-4">
+					<Command className="border p-2">
+						<CommandInput
+							placeholder={inputPlaceholder}
+							onValueChange={setInputValue}
+							value={inputValue}
+							className="placeholder:opacity-50"
+						/>
+						<CommandList>{renderCommandListContent()}</CommandList>
+					</Command>
+				</div>
 				<DrawerFooter className="pt-2">
 					<DrawerClose asChild>
 						<Button variant="outline">Cancel</Button>
