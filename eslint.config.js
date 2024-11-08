@@ -16,7 +16,7 @@ export default [
 
 	// Directories to ignore during linting
 	{
-		ignores: ["**/build/", "**/node_modules/", "**/dist/"],
+		ignores: ["**/build/", "**/node_modules/", "**/dist/", "**/coverage-ts/"],
 	},
 
 	// Configure the import resolver for specific extensions
