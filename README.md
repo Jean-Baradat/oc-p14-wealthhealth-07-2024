@@ -1,30 +1,51 @@
-# React + TypeScript + Vite
+# Welcome aboard, captain
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is the 14th in the OpenClassrooms training "Faites passer une librairie jQuery vers React". The goal is to completely redesign the HRnet application, which is intended for managing employee records. The application, originally in jQuery, will be converted to React JS. Subsequently, a JS package was developed in-house (find the package [here](https://jean-baradat.github.io/oc-p14--jean_rc-dialog-10-2024/)) and integrated into the new version of HRnet.
 
-Currently, two official plugins are available:
+This project was developed with:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [Vite](https://vitejs.dev/)
+- [React 18](https://react.dev/)
+- [Axios](https://axios-http.com/)
+- [Node.js](https://nodejs.org/en)
+- [Prettier](https://prettier.io/)
+- [ESlint](https://eslint.org/)
+- [Simple icons](https://simpleicons.org/)
+- [lucide React](https://lucide.dev/guide/packages/lucide-react)
+- [Redux Toolkit](https://redux-toolkit.js.org/)
+- [Redux Toolkit Query](https://redux-toolkit.js.org/rtk-query/overview)
+- [tailwindcss](https://tailwindcss.com/)
+- [shadcn/ui](https://ui.shadcn.com/)
+- [zod](https://zod.dev/)
+- [@jean_b/rc-dialog](https://jean-baradat.github.io/oc-p14--jean_rc-dialog-10-2024/)
+- [TypeScript](https://www.typescriptlang.org/) 
+- [Radix](https://www.radix-ui.com/) 
+- [TansTack](https://tanstack.com/) 
 
-## Expanding the ESLint configuration
+If you need more information about the project, please go to **package.json**
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-- Configure the top-level `parserOptions` property like this:
+## Start
 
-```js
-export default {
-	// other rules...
-	parserOptions: {
-		ecmaVersion: "latest",
-		sourceType: "module",
-		project: ["./tsconfig.json", "./tsconfig.node.json"],
-		tsconfigRootDir: __dirname,
-	},
-}
+To see the result, visit [https://oc-p14-wealthhealth-07-2024.vercel.app/](https://oc-p14-wealthhealth-07-2024.vercel.app/) where the project is hosted.
+
+You can also test it locally with:
+
+```bash
+git clone https://github.com/Jean-Baradat/oc-p14-wealthhealth-07-2024
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+Then:
+```bash
+npm i
+```
+
+and launch with Vite:
+```bash
+npm run dev
+```
+
+The input "Finding your address made easy" will not work because I am not providing the API. Test this feature at [https://oc-p14-wealthhealth-07-2024.vercel.app/](https://oc-p14-wealthhealth-07-2024.vercel.app/).
+
+
+Jean 👋
