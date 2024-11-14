@@ -4,18 +4,5 @@
 			"source": "/(.*)",
 			"destination": "/index.html"
 		}
-	],
-	"builds": [
-		{
-			"src": "package.json",
-			"use": "@vercel/static-build",
-			"config": {
-				"buildCommand": {
-					"production": "npm run build:prod",
-					"preview": ""
-				},
-				"outputDirectory": "dist"
-			}
-		}
 	]
 }
