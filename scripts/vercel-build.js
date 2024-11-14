@@ -1,10 +1,10 @@
 import { execSync } from "child_process"
 import process from "process"
 
-const buildCommand = process.env.VERCEL_ENV === "production" ? "build:prod" : ""
-
-try {
-	execSync(`npm run ${buildCommand}`, { stdio: "inherit" })
-} catch (error) {
-	process.exit(1)
+if (process.env.VERCEL_ENV === "production") {
+	try {
+		execSync("npm run build:prod", { stdio: "inherit" })
+	} catch (error) {
+		process.exit(1)
+	}
 }

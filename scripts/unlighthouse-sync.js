@@ -46,7 +46,7 @@ async function syncUnlighthouse() {
 		// --------- Remove everything ---------
 		execSync("git rm -rf .")
 		execSync("git checkout master -- .gitignore")
-		execSync("git checkout master -- vercel.json")
+		execSync("git checkout master -- scripts/vercel-build.js")
 
 		// --------- Create package.json with vercel-build scripts ---------
 		const packageJson = {
