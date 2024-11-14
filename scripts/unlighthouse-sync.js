@@ -46,6 +46,8 @@ async function syncUnlighthouse() {
 		// --------- Remove everything ---------
 		execSync("git rm -rf .")
 		execSync("git checkout master -- .gitignore")
+
+		// --------- Setting up the vercel configuration ---------
 		execSync("git show master:vercel.unlighthouse-reports.json > vercel.json")
 
 		// --------- Generate Unlighthouse report ---------
