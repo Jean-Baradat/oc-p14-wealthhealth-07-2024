@@ -8,12 +8,13 @@
 	"builds": [
 		{
 			"src": "package.json",
-			"use": "@vercel/node",
+			"use": "@vercel/static-build",
 			"config": {
 				"buildCommand": {
 					"production": "npm run build:prod",
 					"preview": ""
-				}
+				},
+				"outputDirectory": "dist"
 			}
 		}
 	]
