@@ -5,20 +5,14 @@
 			"destination": "/index.html"
 		}
 	],
-	"git": {
-		"deploymentEnabled": {
-			"master": true,
-			"unlighthouse-reports": true
-		}
-	},
 	"builds": [
 		{
 			"src": "package.json",
 			"use": "@vercel/node",
 			"config": {
 				"buildCommand": {
-					"master": "npm run build:prod",
-					"unlighthouse-reports": ""
+					"production": "npm run build:prod",
+					"preview": ""
 				}
 			}
 		}
