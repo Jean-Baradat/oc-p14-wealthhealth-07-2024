@@ -13,7 +13,8 @@
 		"prettier:write": "prettier --write .",
 		"preview": "vite preview",
 		"preview:network": "vite preview --host",
-		"unlighthouse-sync": "node scripts/unlighthouse-sync.js"
+		"unlighthouse-sync": "node scripts/unlighthouse-sync.js",
+		"vercel-build": "node scripts/vercel-build.js"
 	},
 	"dependencies": {
 		"@hookform/resolvers": "^3.9.0",
