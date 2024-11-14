@@ -46,15 +46,7 @@ async function syncUnlighthouse() {
 		// --------- Remove everything ---------
 		execSync("git rm -rf .")
 		execSync("git checkout master -- .gitignore")
-		execSync("git checkout master -- scripts/vercel-build.js")
-
-		// --------- Create package.json with vercel-build scripts ---------
-		const packageJson = {
-			scripts: {
-				"vercel-build": "node scripts/vercel-build.js",
-			},
-		}
-		fs.writeFileSync("package.json", JSON.stringify(packageJson, null, 2))
+		execSync("git show master:vercel.unlighthouse-reports.json > vercel.json")
 
 		// --------- Generate Unlighthouse report ---------
 		console.log("📊 Generating Unlighthouse report...")
