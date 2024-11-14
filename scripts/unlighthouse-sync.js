@@ -47,7 +47,8 @@ async function syncUnlighthouse() {
 		execSync("git rm -rf .")
 		execSync("git checkout master -- .gitignore")
 		execSync("git checkout master -- vercel.json")
-		execSync("npm init -y")
+		execSync("npm init")
+		execSync('npm pkg set scripts.vercel-build="node scripts/vercel-build.js"')
 
 		// --------- Generate Unlighthouse report ---------
 		console.log("📊 Generating Unlighthouse report...")
