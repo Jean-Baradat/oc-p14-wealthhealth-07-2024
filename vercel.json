@@ -17,7 +17,7 @@
 			"use": "@vercel/node",
 			"config": {
 				"buildCommand": {
-					"master": "vite build",
+					"master": "npm run build:prod",
 					"unlighthouse-reports": ""
 				}
 			}
