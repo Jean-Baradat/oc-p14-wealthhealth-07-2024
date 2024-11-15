@@ -49,7 +49,7 @@ const HeaderButton = (
 	return (
 		<Button
 			variant="link"
-			className="px-1 font-bold"
+			className="px-1 font-bold text-secondary-foreground"
 			onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
 		>
 			{ColName}
