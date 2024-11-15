@@ -4,6 +4,7 @@ import { Calendar } from "@/components/shadcn/calendar"
 import { Button } from "@/components/shadcn/button"
 import {
 	FormControl,
+	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
@@ -167,105 +168,108 @@ const FormFieldDateInput = ({
 			name={name}
 			render={({ field }) => (
 				<FormItem>
-					<FormLabel className="inline-flex items-center gap-1">
-						<span>{label}</span>
-						{form.errors[name] && <OctagonAlert className="size-4" />}
-						<FormMessage />
+					<FormLabel className="inline-flex items-center gap-1 text-nowrap">
+						<span className="flex gap-1">
+							<span>{label}</span>
+							{form.errors[name] && <OctagonAlert className="size-4" />}
+						</span>
+						<FormMessage className="truncate" />
 					</FormLabel>
 
-					<FormControl>
-						<div className="flex gap-2">
-							<Popover>
-								<PopoverTrigger asChild>
-									<Button variant={"outline"}>
-										<CalendarIcon className="size-4" />
-									</Button>
-								</PopoverTrigger>
+					<div className="flex gap-2">
+						<Popover>
+							<PopoverTrigger asChild>
+								<Button variant={"outline"}>
+									<CalendarIcon className="size-4" />
+									<span className="sr-only">Calendar</span>
+								</Button>
+							</PopoverTrigger>
 
-								<PopoverContent
-									className="w-auto p-3"
-									align="start"
-								>
-									<div className="flex gap-3">
-										<Select
-											onValueChange={year => handleYearsSelect(year, field)}
-											defaultValue={handleSelectedDateCalendar<string>(
-												field.value,
-												"year",
-											)}
-											value={handleSelectedDateCalendar<string>(
-												field.value,
-												"year",
-											)}
-										>
-											<SelectTrigger>
-												<SelectValue placeholder="Select Year" />
-											</SelectTrigger>
-											<SelectContent
-												position="popper"
-												className="max-h-80"
-											>
-												{years.map(year => {
-													return (
-														<SelectItem
-															key={year.key}
-															value={year.value}
-														>
-															{year.value}
-														</SelectItem>
-													)
-												})}
-											</SelectContent>
-										</Select>
-										<Select
-											onValueChange={month => handleMonthsSelect(month, field)}
-											defaultValue={handleSelectedDateCalendar<string>(
-												field.value,
-												"month",
-											)}
-											value={handleSelectedDateCalendar<string>(
-												field.value,
-												"month",
-											)}
-										>
-											<SelectTrigger>
-												<SelectValue placeholder="Select Month" />
-											</SelectTrigger>
-											<SelectContent
-												position="popper"
-												className="max-h-80"
-											>
-												{months.map(value => {
-													return (
-														<SelectItem
-															key={value.key}
-															value={value.monthNumber}
-														>
-															{value.value}
-														</SelectItem>
-													)
-												})}
-											</SelectContent>
-										</Select>
-									</div>
-									<Calendar
-										mode="single"
-										selected={handleSelectedDateCalendar<Date>(
+							<PopoverContent
+								className="w-auto p-3"
+								align="start"
+							>
+								<div className="flex gap-3">
+									<Select
+										onValueChange={year => handleYearsSelect(year, field)}
+										defaultValue={handleSelectedDateCalendar<string>(
 											field.value,
-											"calendar",
+											"year",
 										)}
-										defaultMonth={handleSelectedDateCalendar<Date>(
+										value={handleSelectedDateCalendar<string>(
 											field.value,
-											"calendar",
+											"year",
 										)}
-										key={date?.toISOString()}
-										onSelect={value => handleCalendar(value, field)}
-										disabled={date =>
-											date >= new Date() || date <= new Date("1900-01-01")
-										}
-									/>
-								</PopoverContent>
-							</Popover>
+									>
+										<SelectTrigger>
+											<SelectValue placeholder="Select Year" />
+										</SelectTrigger>
+										<SelectContent
+											position="popper"
+											className="max-h-80"
+										>
+											{years.map(year => {
+												return (
+													<SelectItem
+														key={year.key}
+														value={year.value}
+													>
+														{year.value}
+													</SelectItem>
+												)
+											})}
+										</SelectContent>
+									</Select>
+									<Select
+										onValueChange={month => handleMonthsSelect(month, field)}
+										defaultValue={handleSelectedDateCalendar<string>(
+											field.value,
+											"month",
+										)}
+										value={handleSelectedDateCalendar<string>(
+											field.value,
+											"month",
+										)}
+									>
+										<SelectTrigger>
+											<SelectValue placeholder="Select Month" />
+										</SelectTrigger>
+										<SelectContent
+											position="popper"
+											className="max-h-80"
+										>
+											{months.map(value => {
+												return (
+													<SelectItem
+														key={value.key}
+														value={value.monthNumber}
+													>
+														{value.value}
+													</SelectItem>
+												)
+											})}
+										</SelectContent>
+									</Select>
+								</div>
+								<Calendar
+									mode="single"
+									selected={handleSelectedDateCalendar<Date>(
+										field.value,
+										"calendar",
+									)}
+									defaultMonth={handleSelectedDateCalendar<Date>(
+										field.value,
+										"calendar",
+									)}
+									key={date?.toISOString()}
+									onSelect={value => handleCalendar(value, field)}
+									disabled={date =>
+										date >= new Date() || date <= new Date("1900-01-01")
+									}
+								/>
+							</PopoverContent>
+						</Popover>
+						<FormControl>
 							<Input
 								maxLength={input.maxLength}
 								placeholder={input.placeholder}
@@ -275,8 +279,11 @@ const FormFieldDateInput = ({
 									form.errors[name] && "focus-visible:ring-destructive"
 								}
 							/>
-						</div>
-					</FormControl>
+						</FormControl>
+						<FormDescription className="sr-only">
+							This is for the {label}.
+						</FormDescription>
+					</div>
 				</FormItem>
 			)}
 		/>

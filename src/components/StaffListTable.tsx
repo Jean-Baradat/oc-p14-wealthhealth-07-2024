@@ -40,6 +40,7 @@ import { useState } from "react"
 import { format, parseISO } from "date-fns"
 import { Input } from "@/components/shadcn/input"
 import { StaffFormFields, StaffFormFormSubmitted } from "@/store/Slices"
+import { Label } from "@/components/shadcn/label"
 
 const HeaderButton = (
 	column: Column<StaffFormFields, unknown>,
@@ -184,10 +185,17 @@ const StaffListTable = ({ data }: { data: StaffFormFormSubmitted[] }) => {
 
 	return (
 		<div>
+			<Label
+				htmlFor="search-anything"
+				className="sr-only"
+			>
+				Search for anything in the table
+			</Label>
 			<Input
 				onChange={handleSearchChange}
 				placeholder="Search anything..."
 				className="sticky top-[4.5rem] z-10 mb-2 h-12 border-muted-foreground/50 bg-background text-lg shadow-sm"
+				id="search-anything"
 			/>
 
 			<div className="rounded border">

@@ -1,5 +1,6 @@
 import {
 	FormControl,
+	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
@@ -58,14 +59,16 @@ const FormFieldDefaultInput = ({
 			name={name}
 			render={() => (
 				<FormItem>
-					<FormLabel className="inline-flex items-center gap-1">
-						<span>{label}</span>
-						{form.errors[name] && <OctagonAlert className="size-4" />}
-						<FormMessage />
+					<FormLabel className="inline-flex items-center gap-1 text-nowrap">
+						<span className="flex gap-1">
+							<span>{label}</span>
+							{form.errors[name] && <OctagonAlert className="size-4" />}
+						</span>
+						<FormMessage className="truncate" />
 					</FormLabel>
 
-					<FormControl>
-						<div className="flex gap-2">
+					<div className="flex gap-2">
+						<FormControl>
 							{autocompleteValue ? (
 								<Input
 									maxLength={input.maxLength}
@@ -86,33 +89,35 @@ const FormFieldDefaultInput = ({
 									}
 								/>
 							)}
-
-							{form.errors[name]?.type === "invalid_string" && (
-								<Popover>
-									<PopoverTrigger asChild>
-										<Button
-											variant={"outline"}
-											className="hover:bg-muted"
-										>
-											<CircleHelp className="size-4" />
-										</Button>
-									</PopoverTrigger>
-									<PopoverContent align="end">
-										<p className="pb-2 text-justify">
-											{invalidStringMessage.content}
-										</p>
-										<p className="pb-3">{invalidStringMessage.example}</p>
-										<Button
-											className="w-full"
-											asChild
-										>
-											<NavLink to="">A problem ? Report a bug</NavLink>
-										</Button>
-									</PopoverContent>
-								</Popover>
-							)}
-						</div>
-					</FormControl>
+						</FormControl>
+						<FormDescription className="sr-only">
+							This is for the {label}.
+						</FormDescription>
+						{form.errors[name]?.type === "invalid_string" && (
+							<Popover>
+								<PopoverTrigger asChild>
+									<Button
+										variant={"outline"}
+										className="hover:bg-muted"
+									>
+										<CircleHelp className="size-4" />
+									</Button>
+								</PopoverTrigger>
+								<PopoverContent align="end">
+									<p className="pb-2 text-justify">
+										{invalidStringMessage.content}
+									</p>
+									<p className="pb-3">{invalidStringMessage.example}</p>
+									<Button
+										className="w-full"
+										asChild
+									>
+										<NavLink to="">A problem ? Report a bug</NavLink>
+									</Button>
+								</PopoverContent>
+							</Popover>
+						)}
+					</div>
 				</FormItem>
 			)}
 		/>

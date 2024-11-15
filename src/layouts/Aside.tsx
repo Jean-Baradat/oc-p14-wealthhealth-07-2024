@@ -29,12 +29,14 @@ const Aside = () => {
 					</Link>
 				</div>
 				<div className="flex-1">
-					<nav className="sticky top-3 grid items-start gap-2 px-2 text-sm font-medium lg:top-4 lg:px-4">
+					<nav className="sticky top-3 grid items-start gap-2 px-2 text-base lg:top-4 lg:px-4">
 						<NavLink
 							to="/"
 							className={({ isActive }) =>
-								`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
-									isActive ? "bg-muted text-primary" : "text-muted-foreground"
+								`flex items-center gap-3 rounded-lg p-3 transition-all hover:text-primary ${
+									isActive
+										? "bg-muted text-primary/90"
+										: "text-muted-foreground"
 								}`
 							}
 						>
@@ -44,8 +46,10 @@ const Aside = () => {
 						<NavLink
 							to="/staff-list"
 							className={({ isActive }) =>
-								`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
-									isActive ? "bg-muted text-primary" : "text-muted-foreground"
+								`flex items-center gap-3 rounded-lg p-3 transition-all hover:text-primary ${
+									isActive
+										? "bg-muted text-primary/90"
+										: "text-muted-foreground"
 								}`
 							}
 						>

@@ -1,5 +1,6 @@
 import {
 	FormControl,
+	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
@@ -80,13 +81,15 @@ const FormFieldSelect = ({
 			name={name}
 			render={() => (
 				<FormItem>
-					<FormLabel className="inline-flex items-center gap-1">
-						<span>{label}</span>
-						{form.errors[name] && <OctagonAlert className="size-4" />}
-						<FormMessage />
+					<FormLabel className="inline-flex items-center gap-1 text-nowrap">
+						<span className="flex gap-1">
+							<span>{label}</span>
+							{form.errors[name] && <OctagonAlert className="size-4" />}
+						</span>
+						<FormMessage className="truncate" />
 					</FormLabel>
 
-					<div className="flex items-center gap-2">
+					<div className="flex gap-2">
 						<Select
 							onValueChange={handleInput}
 							value={field.value || ""}
@@ -96,6 +99,9 @@ const FormFieldSelect = ({
 									<SelectValue placeholder={placeholder} />
 								</SelectTrigger>
 							</FormControl>
+							<FormDescription className="sr-only">
+								This is for the {label}.
+							</FormDescription>
 							<SelectContent className="max-h-52">
 								{dataList.map((item: dataListItem) => (
 									<SelectItem
@@ -107,6 +113,7 @@ const FormFieldSelect = ({
 								))}
 							</SelectContent>
 						</Select>
+
 						{field.value && (
 							<TooltipProvider>
 								<Tooltip delayDuration={0}>

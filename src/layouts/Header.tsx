@@ -157,6 +157,7 @@ const Header = () => {
 					className="rounded-full"
 				>
 					<CircleUser className="size-5" />
+					<span className="sr-only">My Profile</span>
 				</Button>
 			</div>
 		</header>
