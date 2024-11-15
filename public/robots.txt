@@ -1,3 +1,0 @@
-User-Agent: *
-
-Sitemap: https://oc-p14-wealthhealth-07-2024.vercel.app/sitemap.xml
