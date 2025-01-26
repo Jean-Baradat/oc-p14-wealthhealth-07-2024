@@ -6,8 +6,7 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/shadcn/form"
-import { OctagonAlert, X } from "lucide-react"
-
+import { OctagonAlert, X, ChevronDown } from "lucide-react"
 import {
 	Select,
 	SelectContent,
@@ -26,6 +25,15 @@ import {
 } from "@/components/shadcn/tooltip"
 import { StaffFormFieldsType } from "@/components/StaffForm"
 import { State } from "@/db/states"
+import {
+	Drawer,
+	DrawerContent,
+	DrawerDescription,
+	DrawerHeader,
+	DrawerTitle,
+	DrawerTrigger,
+} from "@/components/shadcn/drawer"
+import { useMediaQuery } from "@/hooks/useMediaQuery"
 
 type dataListItem = {
 	key: string
@@ -50,6 +58,8 @@ const FormFieldSelect = ({
 	tooltipContent,
 }: FormFieldSelectProps) => {
 	const [hasUserEdited, setHasUserEdited] = useState(false)
+	const [open, setOpen] = useState(false)
+	const isDesktop = useMediaQuery("(min-width: 768px)")
 
 	const { field } = useController({
 		name,
@@ -90,36 +100,86 @@ const FormFieldSelect = ({
 					</FormLabel>
 
 					<div className="flex gap-2">
-						<Select
-							onValueChange={handleInput}
-							value={field.value || ""}
-						>
-							<FormControl>
-								<SelectTrigger ref={field.ref}>
-									<SelectValue placeholder={placeholder} />
-								</SelectTrigger>
-							</FormControl>
-							<FormDescription className="sr-only">
-								This is for the {label}.
-							</FormDescription>
-							<SelectContent className="max-h-52">
-								{dataList.map((item: dataListItem) => (
-									<SelectItem
-										key={item.key}
-										value={item.label}
+						{isDesktop ? (
+							// Desktop version with Select
+							<Select
+								onValueChange={handleInput}
+								value={field.value || ""}
+							>
+								<FormControl>
+									<SelectTrigger ref={field.ref}>
+										<SelectValue placeholder={placeholder} />
+									</SelectTrigger>
+								</FormControl>
+								<FormDescription className="sr-only">
+									This is for the {label}.
+								</FormDescription>
+								<SelectContent className="max-h-52">
+									{dataList.map((item: dataListItem) => (
+										<SelectItem
+											key={item.key}
+											value={item.label}
+										>
+											{item.value}
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
+						) : (
+							// Mobile version with Drawer
+							<Drawer
+								open={open}
+								onOpenChange={setOpen}
+							>
+								<DrawerTrigger asChild>
+									<Button
+										variant="outline"
+										className="w-full justify-between"
 									>
-										{item.value}
-									</SelectItem>
-								))}
-							</SelectContent>
-						</Select>
+										<span className="truncate">
+											{field.value || placeholder}
+										</span>
+										<ChevronDown className="ml-2 size-4 shrink-0 opacity-50" />
+									</Button>
+								</DrawerTrigger>
+
+								<DrawerContent className="h-1/2">
+									<DrawerHeader>
+										<DrawerTitle className="text-center">{label}</DrawerTitle>
+										<DrawerDescription className="text-center">
+											Select a {label.toLowerCase()}
+										</DrawerDescription>
+									</DrawerHeader>
+
+									<div className="overflow-y-auto p-4">
+										<div className="grid gap-1 p-2">
+											{dataList.map((item: dataListItem) => (
+												<Button
+													key={item.key}
+													variant={
+														field.value === item.label ? "default" : "outline"
+													}
+													className="w-full"
+													onClick={() => {
+														handleInput(item.label)
+														setOpen(false)
+													}}
+												>
+													{item.value}
+												</Button>
+											))}
+										</div>
+									</div>
+								</DrawerContent>
+							</Drawer>
+						)}
 
 						{field.value && (
 							<TooltipProvider>
 								<Tooltip delayDuration={0}>
 									<TooltipTrigger asChild>
 										<Button
-											variant={"outline"}
+											variant="outline"
 											className="hover:bg-destructive/10"
 											onClick={handleClear}
 										>
